@@ -1,12 +1,12 @@
 # Shubin Framework: lite version
 
-**Full title:** Vault for small projects — lite version
+**Full title:** Repository for small projects — lite version
 **Part of:** Shubin Framework (starter document)
-**Version:** 2.0
+**Version:** 3.0
 
 **Who it's for:** 1–2 people working on an MVP or pet project with Claude Code. Speed matters more than process. No plans to hire yet.
 
-**What it is:** minimal practice of using a markdown folder as external memory for Claude. No ADRs, no rituals, no three-tier CLAUDE.md hierarchy. Just enough so Claude stops forgetting context between sessions. Plus — an optional knowledge module (Karpathy's method) for ingesting external sources.
+**What it is:** minimal practice of using a markdown folder as external memory for Claude. No ADRs, no rituals, no three-tier `AGENTS.md` hierarchy. Just enough so Claude stops forgetting context between sessions. Plus — an optional knowledge module (Karpathy's method) for ingesting external sources.
 
 **Setup time:** 15 minutes basic, +10 minutes for the knowledge module (optional).
 
@@ -21,7 +21,7 @@
 
 You work with Claude Code. On Monday you agreed to use Supabase, not Firebase. On Friday, new session — Claude suggests Firebase again. You explain. Next Tuesday — again. It's annoying and eats up an hour per week in repeated explanations.
 
-The vault solves exactly this. Written once — Claude reads it every session.
+A small `notes/` folder solves exactly this. Written once — Claude reads it every session.
 
 You don't need to solve other problems at this stage. ADRs, roles, rituals, event taxonomy — those are for teams that need coordination. Your coordination is in one place: your head.
 
@@ -136,7 +136,7 @@ By the end of the first month, you'll usually have all four files. But don't spe
 
 ## How Claude Code uses this
 
-Create a `CLAUDE.md` file in the project root:
+Create an `AGENTS.md` file in the project root:
 
 ```markdown
 # Project notes
@@ -151,7 +151,7 @@ When we make a significant decision or discover a gotcha —
 suggest adding it to the corresponding file. Don't create files silently.
 ```
 
-That's it. When Claude Code starts in this folder, it automatically reads `CLAUDE.md`, sees links to notes/, and works in context.
+That's it. `AGENTS.md` is the cross-tool standard for AI-agent instructions; Claude Code reads it (along with `CLAUDE.md`) automatically when started in this folder, picks up links to `notes/`, and works in context.
 
 ---
 
@@ -222,14 +222,14 @@ my-project/
         │   ├── personas.md
         │   ├── competitors.md
         │   └── concepts.md
-        └── CLAUDE.md            ← Claude's maintainer instructions
+        └── AGENTS.md            ← Claude's maintainer instructions
 ```
 
 No subfolders in raw/ — flat. For solo, classification by type is overkill.
 
-### Minimal CLAUDE.md for knowledge
+### Minimal AGENTS.md for knowledge
 
-Put this in `notes/knowledge/CLAUDE.md`:
+Put this in `notes/knowledge/AGENTS.md`:
 
 ```markdown
 # Knowledge wiki
@@ -269,7 +269,7 @@ This is the minimum. If you want a more elaborate command set (contradiction che
 1. Over the week, you drop transcripts, articles, notes into `knowledge/raw/`. One file per item with a date in the name.
 2. When a few have accumulated — run Claude Code in the project root:
    ```
-   Read notes/knowledge/CLAUDE.md.
+   Read notes/knowledge/AGENTS.md.
    Ingest all new files in raw/. Update wiki.
    Report back.
    ```
@@ -319,7 +319,7 @@ One of three signals:
 
 Before that, don't complicate things. The lite version pays off from the first week. The full one — only from month 3 with discipline. For a small project the choice is obvious.
 
-When switching to the full version: the knowledge module, if already set up, moves to the vault as `knowledge/`. But not quite "just moves": in lite the `raw/` structure is flat, in the full version it has subfolders (`user-interviews/`, `competitors/`, `industry/`, `calls/`). You'll need to sort existing raw files into subfolders — usually 30 minutes of work for ~30 files. Wiki/ can stay as is — the LLM will recompile on the next ingest.
+When switching to the full version: the knowledge module, if already set up, moves into the repository as `knowledge/`. But not quite "just moves": in lite the `raw/` structure is flat, in the full version it has subfolders (`user-interviews/`, `competitors/`, `industry/`, `calls/`). You'll need to sort existing raw files into subfolders — usually 30 minutes of work for ~30 files. Wiki/ can stay as is — the LLM will recompile on the next ingest.
 
 ---
 
@@ -342,7 +342,7 @@ You decided to start a new project. Idea — SaaS for habit tracking.
 - TypeScript strict
 ```
 
-**Minutes 11–15.** Created `CLAUDE.md` in the root with references to notes/. Started Claude Code: "Scaffold the basics: auth via Supabase, layout with navbar, pages /, /login, /dashboard."
+**Minutes 11–15.** Created `AGENTS.md` in the root with references to notes/. Started Claude Code: "Scaffold the basics: auth via Supabase, layout with navbar, pages /, /login, /dashboard."
 
 Claude read notes, used your decisions, generated code. You work without explaining for the fifth time that Supabase is used.
 
@@ -354,7 +354,7 @@ Claude read notes, used your decisions, generated code. You work without explain
 
 ## Final
 
-That's all. Two files at start, one CLAUDE.md, 15 minutes of setup. Then — just add as you go. The other two files appear on demand (pattern on third copy / first gotcha). The knowledge module — when external sources accumulate.
+That's all. Two files at start, one AGENTS.md, 15 minutes of setup. Then — just add as you go. The other two files appear on demand (pattern on third copy / first gotcha). The knowledge module — when external sources accumulate.
 
 If you didn't write anything in notes after a month — probably your project is very simple and even this isn't needed. If after a month notes/ became the main reference you return to — great, it works.
 
