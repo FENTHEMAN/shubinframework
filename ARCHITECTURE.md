@@ -18,6 +18,8 @@ The repository is in the middle of a v1 → v2 migration. Where the current layo
 README.md              English entry point and elevator pitch
 README.ru.md           Russian entry point (mirror of README)
 ARCHITECTURE.md        this file — map of the repo for contributors
+CONTRIBUTING.md        how to propose changes
+CHANGELOG.md           release history
 LICENSE                MIT
 
 framework.md           full specification, for tech leads
@@ -34,7 +36,7 @@ i18n/                  translations of the lower-case spec documents
   ru/                  Russian translations
 ```
 
-The lower-case files at the root are the framework itself — the documents an adopting team reads. The UPPER_CASE files are meta-documents about this repository. After v2 is complete, the root will also contain `STACK.md`, `GLOSSARY.md`, `AGENTS.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`. These are absent today; this section is updated as they land.
+The lower-case files at the root are the framework itself — the documents an adopting team reads. The UPPER_CASE files are meta-documents about this repository. `CONTRIBUTING.md` and `CHANGELOG.md` were added in stage 4 of the v2 migration. The remaining canonical UPPER_CASE files anticipated by v2 — `STACK.md`, `GLOSSARY.md`, `AGENTS.md` — are still absent and will land in a later stage; this section is updated as they do.
 
 ### `README.md`, `README.ru.md`
 
@@ -44,17 +46,25 @@ The entry points. `README.md` is the canonical English version; `README.ru.md` m
 
 This file. It exists so that a contributor or AI agent landing in the repo for the first time has a single short document that explains the layout and the invariants. It is the only meta-document about the layout; if a rationale is not here, it is in `framework.md` or in a commit message.
 
+### `CONTRIBUTING.md`
+
+The contributor entry point: how to propose a change (issue first for anything beyond a typo), what kinds of contributions are welcome (counterexamples, real cases, reports of practices that didn't work), what needs discussion before a PR (new top-level directories, new canonical files, chapter renames), and the project's editorial style. Read this before opening a non-trivial PR.
+
+### `CHANGELOG.md`
+
+Release history in [Keep a Changelog](https://keepachangelog.com/) format. The `[Unreleased]` block accumulates v2 work in progress; the v2.0.0 entry is filled in at release. Until then, the per-stage `v2:` commits on the `v2` branch are the authoritative log of what changed.
+
 ### `LICENSE`
 
 MIT. The framework is given away; adopting teams are expected to copy or fork the structure freely. The license has not changed since v1 and is not expected to change in v2.
 
 ### `framework.md`
 
-The full specification of the framework, for the tech lead setting up a vault from scratch. Covers the two principles, the directory layout an adopting team creates, the lifecycle of features and ADRs, the role of the journal, and the optional Karpathy module. Currently 1133 lines — a v1 artifact. The v2 target is roughly five hundred lines, with the remainder split into a future `guides/` directory (long-form examples like the running onboarding scenario) and tightened prose. Until that work lands, expect this file to feel longer than the rest of the repo would suggest.
+The full specification of the framework, for the tech lead setting up a repository from scratch. Covers the two principles, the directory layout an adopting team creates, the lifecycle of features and ADRs, the role of the journal, scaling guidance, and the optional Karpathy module. Roughly five hundred lines as of v2; the running onboarding example was extracted to `guides/feature-cycle-example.md`.
 
 ### `lite.md`
 
-The solo and 1–2 person variant. For an MVP or pet project where the full framework would be overhead, `lite.md` keeps the same principles but drops the ceremony. A team of one with `lite.md` should still be able to graduate to `framework.md` later without rewriting their vault.
+The solo and 1–2 person variant. For an MVP or pet project where the full framework would be overhead, `lite.md` keeps the same principles but drops the ceremony. A team of one with `lite.md` should still be able to graduate to `framework.md` later without rewriting their notes.
 
 ### `knowledge.md`
 
@@ -62,7 +72,7 @@ The Karpathy LLM-wiki module specification. Three layers — immutable raw sourc
 
 ### `non-tech.md`
 
-For PMs, designers, and CEOs who need to read and edit the vault without using the terminal. Covers the GitHub web UI flow, branch protection, and review etiquette for non-engineers. Read this if you are setting up a vault that includes non-technical contributors, or if you are a non-engineer trying to participate in one.
+For PMs, designers, and CEOs who need to read and edit the repository without using the terminal. Covers the GitHub web UI flow, branch protection, and review etiquette for non-engineers. Read this if you are setting up a repository that includes non-technical contributors, or if you are a non-engineer trying to participate in one.
 
 ### `non-engineering.md`
 
@@ -82,7 +92,7 @@ Files in this repo fall into four layers, distinguished by their place and case.
 
 ### UPPER_CASE in root = canon
 
-Documents whose names a contributor or AI agent should learn first: `README.md`, `ARCHITECTURE.md`, `LICENSE`. Future canon files are `STACK.md`, `GLOSSARY.md`, `AGENTS.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`. They change rarely and describe what this repository *is* rather than what the framework prescribes. The shouty-case is deliberate: a contributor scanning the root should be able to spot the meta-documents without reading filenames carefully.
+Documents whose names a contributor or AI agent should learn first: `README.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`. Future canon files still pending are `STACK.md`, `GLOSSARY.md`, and `AGENTS.md`. They change rarely and describe what this repository *is* rather than what the framework prescribes. The shouty-case is deliberate: a contributor scanning the root should be able to spot the meta-documents without reading filenames carefully.
 
 ### lower-case in root = framework specs
 
