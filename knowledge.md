@@ -2,7 +2,7 @@
 
 **Full title:** LLM wiki for teams, adapted from Karpathy's method
 **Part of:** Shubin Framework (companion document)
-**Version:** 1.0
+**Version:** 2.0
 
 **Who it's for:** any team member — developer, PM, designer, CEO, domain expert. No technical background required. If you can write markdown and click commit in GitHub Desktop — that's enough.
 
@@ -43,17 +43,17 @@ In April 2026, Andrej Karpathy published the "LLM wiki" pattern — a knowledge 
 
 1. **raw/** — immutable sources
 2. **wiki/** — LLM-generated pages with cross-references
-3. **CLAUDE.md** — instructions for how the LLM maintains the wiki
+3. **AGENTS.md** — instructions for how the LLM maintains the wiki
 
 For personal knowledge management, thousands of people are already using it. For teams, the approach adapts almost 1-to-1, with small caveats (below).
 
 ### How this differs from the rest of the framework
 
 Shubin Framework has other layers:
-- `active/decisions/` — ADRs (our decisions). Humans write.
-- `active/features/` — feature specs. Humans write.
-- `active/patterns/` — code patterns. Humans write.
-- `log/feedback/` — raw append-only feedback. Humans write.
+- `decisions/` — ADRs (our decisions). Humans write.
+- `features/` — feature specs. Humans write.
+- `patterns/` — code patterns. Humans write.
+- `journal/feedback/` — raw append-only feedback. Humans write.
 
 These are **human-maintained** layers. The LLM reads them, doesn't modify them.
 
@@ -66,11 +66,12 @@ The knowledge module is **the only layer where the LLM is the maintainer**. Huma
 ### 1.1. Folder structure
 
 ```
-vault/
-├── stable/
-├── active/
-├── log/
-└── knowledge/                    ← new layer
+your-product/
+├── decisions/
+├── features/
+├── patterns/
+├── journal/
+└── knowledge/                    ← this module
     ├── raw/                      ← immutable, humans write/drop
     │   ├── user-interviews/
     │   │   ├── 2026-04-10-acme-corp.md
@@ -97,7 +98,7 @@ vault/
     │   │   └── ai-in-productivity-tools.md
     │   └── index.md              ← wiki catalog
     │
-    └── CLAUDE.md                 ← LLM maintainer instructions
+    └── AGENTS.md                 ← LLM maintainer instructions
 ```
 
 ### 1.2. Two rules you can't break
@@ -151,8 +152,8 @@ This helps the LLM understand context during compilation. Works without frontmat
 - Articles, studies, reports
 
 **Don't put in:**
-- Your internal ADRs (those are in `active/decisions/`)
-- Feature specs (those are in `active/features/`)
+- Your internal ADRs (those are in `decisions/`)
+- Feature specs (those are in `features/`)
 - Team operational documents (statuses, schedules)
 - Third-party materials without PII scrubbing (client names, phone numbers, financial data)
 - NDA-protected materials that can't be distributed inside the team
@@ -232,15 +233,15 @@ sources: 8
 
 ---
 
-## 4. The module's CLAUDE.md: maintainer instructions
+## 4. The module's AGENTS.md: maintainer instructions
 
-### 4.1. Why a separate CLAUDE.md
+### 4.1. Why a separate AGENTS.md
 
-You already have `COMMON.md` at the vault root. But `knowledge/` needs a **separate** `CLAUDE.md`, because the LLM's behavior here is different: not "read while working on code", but "actively maintain the wiki".
+You already have `AGENTS.md` at the repository root. But `knowledge/` needs a **separate** `AGENTS.md`, because the LLM's behavior here is different: not "read while working on code", but "actively maintain the wiki".
 
-This file lives at `knowledge/CLAUDE.md` and is read by Claude Code / Cowork when working with this folder.
+This file lives at `knowledge/AGENTS.md` and is read by Claude Code / Cowork when working with this folder.
 
-### 4.2. A working CLAUDE.md example
+### 4.2. A working AGENTS.md example
 
 ```markdown
 # Knowledge module: maintainer instructions
@@ -319,8 +320,8 @@ Critically: **the prohibition on inventing facts and the obligation to reference
 **Any day of the week:** you've dropped new raw sources from the past week. Interviews, calls, articles, reports.
 
 **Ingest session (20–40 minutes, 1–2 times a week):**
-1. Open Claude Code in the vault folder (or Cowork, if you prefer).
-2. Command: "Go to knowledge/CLAUDE.md, read the instructions. Then ingest all new files in raw/ from the past week."
+1. Open Claude Code in the repository folder (or Cowork, if you prefer).
+2. Command: "Go to knowledge/AGENTS.md, read the instructions. Then ingest all new files in raw/ from the past week."
 3. Claude reads each new raw file, updates the wiki.
 4. After each file — git commit ("ingest: <file>"). This gives you a compilation history.
 5. After the whole session — a short report from Claude: what was updated, what was created, which contradictions were found.
@@ -352,7 +353,7 @@ Each is the owner of their raw/ category. Everyone together reads the wiki/.
 
 ### 5.4. When NOT to use the Knowledge Module
 
-- **Your vault only contains technical decisions and ADRs.** Then the module isn't needed — it's for the external world, not internal decisions.
+- **Your repository only contains technical decisions and ADRs.** Then the module isn't needed — it's for the external world, not internal decisions.
 - **You have fewer than 10 raw sources in the first 2 months.** The module pays off on volume. Setting it up for three interviews is overkill.
 - **The team isn't ready to run an ingest session once a week.** Without that discipline, the wiki will be falsely out-of-date, which is worse than no wiki.
 
@@ -362,8 +363,8 @@ Each is the owner of their raw/ category. Everyone together reads the wiki/.
 
 ### 6.1. Technical person (developer, tech lead): 20 minutes
 
-1. In the vault repo: create the `knowledge/` folder with `raw/` and `wiki/` subfolders.
-2. Create `knowledge/CLAUDE.md` based on the template in section 4.2.
+1. In the repository: create the `knowledge/` folder with `raw/` and `wiki/` subfolders.
+2. Create `knowledge/AGENTS.md` based on the template in section 4.2.
 3. Create `knowledge/raw/user-interviews/`, `raw/competitors/`, `raw/industry/`, `raw/calls/` — according to the team's actual needs.
 4. Create `knowledge/wiki/index.md` with an empty list — the LLM will fill it in.
 5. Commit + push.
@@ -371,12 +372,12 @@ Each is the owner of their raw/ category. Everyone together reads the wiki/.
 
 ### 6.2. Non-technical person (PM, designer, CEO): 15 minutes
 
-This section assumes that your team already has Claude Code set up (on a developer's machine) and/or Cowork (desktop app for vault work). If not — ask a developer to set things up first. For non-tech contribution to raw/, either of the two is enough; the ingest session is usually run by a developer via Claude Code, but you can query the wiki via Cowork independently.
+This section assumes that your team already has Claude Code set up (on a developer's machine) and/or Cowork (desktop app for working with the repository). If not — ask a developer to set things up first. For non-tech contribution to raw/, either of the two is enough; the ingest session is usually run by a developer via Claude Code, but you can query the wiki via Cowork independently.
 
 If you haven't set up git yet — start with `non-tech.md`, sections 2–3.
 
 Then:
-1. In your vault clone, open `knowledge/raw/<subfolder>/`.
+1. In your repository clone, open `knowledge/raw/<subfolder>/`.
 2. Create a new file: `2026-04-18-<what-it-is>.md`.
 3. Add frontmatter (template in section 2.2).
 4. Paste the contents (transcript, article text, notes).
@@ -391,10 +392,10 @@ If you need an urgent "what do we know about X" — ask a developer to run Claud
 
 When 5–10 files have accumulated in raw/:
 
-1. Open Claude Code at the vault root (developer).
+1. Open Claude Code at the repository root (developer).
 2. Prompt:
    ```
-   Read knowledge/CLAUDE.md. Then ingest all files
+   Read knowledge/AGENTS.md. Then ingest all files
    in knowledge/raw/. Start with user-interviews/.
    After each wiki update, make a git commit with a
    short description.
@@ -428,7 +429,7 @@ notes/
 **Differences from the team version:**
 - No subfolders in raw/ — everything flat. For solo, classifying by type (interview/article/call) is overkill.
 - wiki/ is flat too — 5–10 pages, not a hierarchy.
-- CLAUDE.md for knowledge/ is a copy of the template from 4.2, minus commands like "check for contradictions" — redundant for 5–10 pages.
+- AGENTS.md for knowledge/ is a copy of the template from 4.2, minus commands like "check for contradictions" — redundant for 5–10 pages.
 - Ingest — every 2–3 weeks, not weekly.
 
 **When to add the module to lite:**
@@ -509,10 +510,10 @@ Success criteria validated on the interview
 
 ### 9.3. Knowledge → feedback loop link
 
-When new user signals appear in `log/feedback/` (tickets, reviews, usage observations), they can be periodically promoted to `knowledge/raw/` if they carry domain knowledge, not a specific bug report.
+When new user signals appear in `journal/feedback/` (tickets, reviews, usage observations), they can be periodically promoted to `knowledge/raw/` if they carry domain knowledge, not a specific bug report.
 
 Distinction:
-- `log/feedback/` — operational stream (ticket, review, observation)
+- `journal/feedback/` — operational stream (ticket, review, observation)
 - `knowledge/raw/` — material for compilation into knowledge about the world
 
 Not every feedback item makes it to knowledge. A human decides (usually the PM).
