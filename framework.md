@@ -707,19 +707,19 @@ The key config file at the root of each code repository. Contents:
 
 ## Context
 
-Common context: ../vault/COMMON.md
-Current features: ../vault/active/features/
+Common context: ../AGENTS.md
+Current features: ../features/
 
 ## Stack
 
-See ../vault/stable/stack.md
+See ../STACK.md
 
 ## Before writing code
 
-1. Find the feature in ../vault/active/features/
-2. Check ../vault/active/decisions/ for relevant ADRs
-3. Check ../vault/active/patterns/ for similar patterns
-4. Check ../vault/active/patterns/gotchas.md
+1. Find the feature in ../features/
+2. Check ../decisions/ for relevant ADRs
+3. Check ../patterns/ for similar patterns
+4. Check ../patterns/gotchas.md
 
 ## Rules
 
