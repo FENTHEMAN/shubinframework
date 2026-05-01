@@ -8,94 +8,57 @@
 
 ## What this is
 
-A set of practices for treating a markdown vault as **shared team context** for both humans and AI agents (Claude Code, Cowork).
+A set of practices for treating a single markdown repository as **shared team context** — read equally by humans and AI agents (Claude Code, Cowork). The repository holds the spec; GitHub holds the state. Markdown carries decisions, feature specs, and patterns that don't change every day. Issues, milestones, and PR timelines carry status, ownership, priority, and progress.
 
-When a team works with AI agents in daily engineering, two pains appear:
+Two pains show up together in small teams that work with AI agents day to day. Sessions start from scratch and yesterday's decisions need re-explaining tomorrow. Three months in nobody remembers why the API returns camelCase or why onboarding has four steps and not one. Both are the same problem: context lives in people's heads. Shubin Framework moves it into one place that both humans and agents can read.
 
-- **AI agent amnesia** — every session starts from scratch, decisions made yesterday need re-explaining tomorrow.
-- **Human context loss** — three months later nobody remembers why the API returns camelCase, or why onboarding has 4 steps and not 1.
-
-Both are the same problem: *team context lives in people's heads, not in a readable form.*
-
-Shubin Framework puts the context into one markdown repository (the vault), read equally by humans and AI agents. Plus an optional **knowledge module** implementing Andrej Karpathy's LLM-wiki method, where the LLM actively maintains compiled research pages from raw sources.
+The core is classical engineering practice — ADRs, feature specs, patterns, runbooks, a journal of feedback and incidents. An optional `knowledge/` module implements Andrej Karpathy's "LLM wiki" method, where the LLM maintains compiled research pages from raw sources. The two are independent; adopt the core without the module, or both.
 
 ## Who this is for
 
-- Teams of 2–8 building a product from MVP to early traction
-- Using AI agents (Claude Code, Cowork) as regular team members
-- With at least one person willing to push the practices (tech lead, founder)
+Teams of two to eight people, building a product from MVP to early traction, using AI agents as regular contributors, with at least one person willing to push the practices day to day (tech lead or founder).
 
-**Not for:** teams of 15+, teams without a discipline driver, flow-of-clients agencies, or pure solo work that would be overloaded by the full version (see the lite version).
+**Not for:** teams of fifteen or more (you need heavier process), teams without a discipline driver (the repository will go write-only and die within a quarter), agencies with a flow of client projects, or pure solo work that the full version would overload — the lite variant exists for that.
 
-## Quick start
+## Repository layout
 
-Pick the document matching your situation:
+```
+README.md              English entry point
+README.ru.md           Russian entry point
+ARCHITECTURE.md        map of this repo for contributors
+LICENSE                MIT
+CONTRIBUTING.md        how to propose changes
+CHANGELOG.md           release history
+
+framework.md           full specification, for tech leads
+lite.md                solo and 1–2 person variant
+knowledge.md           Karpathy LLM-wiki module
+non-tech.md            git and the repository without the terminal
+non-engineering.md     Finance / Legal / Security / Data / Support minimum
+
+guides/                long-form examples (e.g. feature cycle walkthrough)
+conventions/           cross-cutting conventions for contributors
+i18n/ru/               Russian translations
+```
+
+The lower-case files are the framework documents an adopting team reads. The UPPER_CASE files are meta-documents about this repository. `ARCHITECTURE.md` covers the layout and invariants in more detail.
+
+## Where to start
+
+Pick the document matching your situation. Don't read all of them at once — each is meant to be read against a concrete task.
 
 | Your situation | Start with |
 |---|---|
-| Solo or pair on MVP / pet project | [`lite.md`](./lite.md) |
-| Tech lead of a 3–8 team, setting up from scratch | [`intro.md`](./intro.md) → [`framework.md`](./framework.md) |
-| PM / designer / CEO on a team that already adopted the framework | [`non-tech.md`](./non-tech.md) |
-| Developer team starting to accumulate user research / competitive intel | [`knowledge.md`](./knowledge.md) |
-| Founder facing first enterprise customer or security questions | [`non-engineering.md`](./non-engineering.md) |
-
-Don't read all of them at once. Each document is meant to be read against a concrete task.
-
-## Vault concept
-
-```
-vault/
-├── stable/              rarely changes (stack, team, glossary)
-├── active/              main work (features, decisions/ADRs, patterns)
-├── log/                 append-only (feedback, incidents, retros)
-└── knowledge/           optional Karpathy LLM-wiki module
-    ├── raw/             immutable external sources
-    ├── wiki/            LLM-compiled pages with cross-refs
-    └── CLAUDE.md        LLM maintainer instructions
-```
-
-Two principles the whole framework rests on:
-
-1. **Append-only for history, mutable for state.** Decisions, feedback, incidents — only appended. Roadmap, feature pages, ADR statuses — change.
-2. **One source of truth per fact.** Each fact has exactly one canonical home. Duplicates diverge.
-
-Everything else is a consequence.
-
-## Relationship to Karpathy's method
-
-In April 2026, Andrej Karpathy published the "LLM wiki" pattern: a three-layer knowledge base (raw immutable sources → LLM-compiled wiki with cross-references → CLAUDE.md schema) where the LLM is the maintainer.
-
-Shubin Framework's core (chapters 2–11 of `framework.md`) is classical engineering practice: ADRs, feature specs, patterns, runbooks — humans write, LLM reads. Karpathy's method is implemented as a separate optional module (`knowledge.md`), where the LLM becomes the maintainer of the wiki. See that document for the full mechanics.
-
-Original Karpathy gist: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
-
-## Documents
-
-All documents on this level are in English. Russian translations are in [`i18n/ru/`](./i18n/ru/).
-
-- [`intro.md`](./intro.md) — 10-minute hub for navigating the framework
-- [`framework.md`](./framework.md) — main document, for tech leads
-- [`lite.md`](./lite.md) — for solo and 1–2 person teams on MVP
-- [`knowledge.md`](./knowledge.md) — Karpathy LLM-wiki module for team knowledge management
-- [`non-tech.md`](./non-tech.md) — git and vault without the terminal
-- [`non-engineering.md`](./non-engineering.md) — minimum on Finance/Legal/Security/Data/Support
-
-## Conventions
-
-Project conventions for contributors and for teams adopting the framework:
-
-- [`conventions/GIT_CONVENTIONS.md`](./conventions/GIT_CONVENTIONS.md) — git commit and branch conventions
+| Solo or 1–2 person team on MVP | [`lite.md`](./lite.md) |
+| Tech lead of a 3–8 team setting up from scratch | [`framework.md`](./framework.md) |
+| PM, designer, or CEO joining a team that already adopted it | [`non-tech.md`](./non-tech.md) |
+| Team accumulating user research or competitive intel | [`knowledge.md`](./knowledge.md) |
+| Founder facing the first enterprise customer | [`non-engineering.md`](./non-engineering.md) |
 
 ## Honest warnings
 
-The framework pays off in months 2–3, not immediately. Without a person pushing the practices, it dies within a quarter. Not everything here fits every team — adapt, don't copy.
+The framework pays off in months two and three, not on day one. Without one person actually pushing the practices it dies within a quarter. Adapt rather than copy — none of this is gospel, and a repository that isn't being read after three months is usually a signal of a deeper problem (the team lacks clarity on what it is building) that no tool replaces.
 
-If you set this up and after 3 months the vault isn't being used, that's usually not a framework failure but a signal of a deeper problem: the team lacks clarity on what it's building. No tool replaces that.
+## License and contributing
 
-## License
-
-MIT. See [LICENSE](./LICENSE).
-
-## Contributing
-
-This is a first public version. Feedback, counterexamples, and reports of practices that didn't work for your team are especially welcome — the framework adapts, it's not a truth.
+MIT — see [LICENSE](./LICENSE). Counterexamples, real-world cases, and reports of practices that didn't work for your team are especially welcome; see [CONTRIBUTING.md](./CONTRIBUTING.md).
