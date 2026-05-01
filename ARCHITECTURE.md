@@ -23,9 +23,8 @@ LICENSE                MIT
 framework.md           full specification, for tech leads
 lite.md                solo and 1–2 person variant
 knowledge.md           Karpathy LLM-wiki module specification
-non-tech.md            git and vault without the terminal
+non-tech.md            git and the repository without the terminal
 non-engineering.md     Finance / Legal / Security / Data / Support minimum
-intro.md               legacy navigation hub (slated for removal in v2)
 
 conventions/           cross-cutting conventions for contributors
   GIT_CONVENTION.md    commit and branch rules
@@ -67,11 +66,7 @@ For PMs, designers, and CEOs who need to read and edit the vault without using t
 
 ### `non-engineering.md`
 
-The minimum a founder needs for Finance, Legal, Security, Data, and Support. Each domain gets a short section with the questions a founder will be asked and where in the vault the answers live. Stack-agnostic and intentionally shallow — it is a starting point, not a manual.
-
-### `intro.md`
-
-Legacy navigation hub from v1. It tries to be a ten-minute on-ramp to the framework but duplicates content already in `README.md` and the opening sections of `framework.md`, and the duplication has already drifted out of sync. It is slated for removal in a later v2 stage. New contributors should ignore it; it will be deleted before v2.0.0 ships.
+The minimum a founder needs for Finance, Legal, Security, Data, and Support. Each domain gets a short section with the questions a founder will be asked and where in the repository the answers live. Stack-agnostic and intentionally shallow — it is a starting point, not a manual.
 
 ### `conventions/`
 
