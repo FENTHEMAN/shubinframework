@@ -1,10 +1,10 @@
-# Shubin Framework: vault for non-technical team members
+# Shubin Framework: the repository for non-technical team members
 
-**Full title:** Guide to working with the vault and git without the terminal
+**Full title:** Guide to working with the repository and git without the terminal
 **Part of:** Shubin Framework (companion document)
-**Version:** 2.0
+**Version:** 3.0
 
-**Who it's for:** PM, designer, marketer, founder, domain expert — any team member who has to work with the vault but has never opened a terminal.
+**Who it's for:** PM, designer, marketer, founder, domain expert — any team member who has to work with the team's markdown repository but has never opened a terminal.
 
 **Reading time:** 30 minutes.
 **Initial setup time:** 45 minutes.
@@ -15,9 +15,9 @@
 - What git is, before today
 
 **What you need to know about context:**
-Your team uses a "vault" — a shared folder of markdown files where the team's knowledge lives (decisions, features, documentation). This folder is synchronized via git — a system that keeps the history of all changes and lets you work together without conflicts.
+Your team uses a shared markdown repository where the team's knowledge lives (decisions, features, documentation). It's synchronized via git — a system that keeps the history of all changes and lets you work together without conflicts.
 
-You need to make changes to the vault — add feature descriptions, update statuses, log feedback. This document teaches you how without pain.
+You need to make changes to the repository — add feature descriptions, update statuses, log feedback. This document teaches you how without pain.
 
 **Related documents:**
 - `framework.md` — full framework for the team's tech lead. Optional reading.
@@ -33,9 +33,9 @@ Very briefly:
 
 **GitHub / GitLab / Bitbucket** are websites that host a copy of your git repository, accessible to everyone on the team.
 
-**Repository (repo)** is a project folder tracked by git. Your team probably has several: vault, frontend, backend, etc.
+**Repository (repo)** is a project folder tracked by git. Your team probably has several: the markdown repository (where knowledge lives), frontend, backend, etc.
 
-To work with the vault, you need to understand four operations:
+To work with the markdown repository, you need to understand four operations:
 - **clone** — download the repository from GitHub to your computer (once at the start)
 - **pull** — update your local copy from GitHub (get other people's changes)
 - **commit** — save your changes locally with a description
@@ -53,7 +53,7 @@ Developers work with git from the command line. You don't need that — use a GU
 
 **GitHub Desktop** ([desktop.github.com](https://desktop.github.com)) — free, simple interface, perfect to start. Works with GitHub out of the box. All examples in this document assume it.
 
-**Obsidian with git plugin** — if you already edit the vault in Obsidian, the "Obsidian Git" plugin automates pull/commit/push in the background. Downside: less control, occasionally commits junk. Works for those who want to forget about git entirely.
+**Obsidian with git plugin** — if you already edit the repository in Obsidian, the "Obsidian Git" plugin automates pull/commit/push in the background. Downside: less control, occasionally commits junk. Works for those who want to forget about git entirely.
 
 **Start with GitHub Desktop.** If in a month you want something else — you'll try it.
 
@@ -64,9 +64,9 @@ Developers work with git from the command line. You don't need that — use a GU
 ### 3.1. What to ask the team on day one
 
 Before starting, ask the developer or tech lead for:
-- The vault repository URL on GitHub
+- The repository URL on GitHub
 - Access to the GitHub organization (you must be added as a member)
-- The name you'll be added under in `stable/team.md`
+- The name you'll be added under in `TEAM.md`
 - The email you'll use for commits (usually your work email)
 - A 10-minute tour of the structure: where what lives, what you can edit, what to leave alone
 
@@ -83,9 +83,9 @@ This is standard onboarding — the developer has done it for others. Don't hesi
 - **VS Code** ([code.visualstudio.com](https://code.visualstudio.com)) — if you're curious about looking at team code.
 - Any markdown editor from your OS app store — if you don't want to install anything new.
 
-**Step 4.** In GitHub Desktop: File → Clone Repository → URL. Paste the vault repository URL. Pick a folder on your computer, e.g., `~/work/vault/`. Click Clone.
+**Step 4.** In GitHub Desktop: File → Clone Repository → URL. Paste the repository URL. Pick a folder on your computer, e.g., `~/work/<repo-name>/`. Click Clone.
 
-In 30 seconds, a copy of the vault appears on your computer. Open it in Obsidian (or another editor) as a vault.
+In 30 seconds, a copy of the repository appears on your computer. Open it in Obsidian (or another editor) as a vault — that's Obsidian's term for an opened folder, unrelated to the framework.
 
 **Done.** You now have a working copy of the team's knowledge on your computer.
 
@@ -93,7 +93,7 @@ In 30 seconds, a copy of the vault appears on your computer. Open it in Obsidian
 
 ## 4. Daily work cycle
 
-Every time you sit down to work with the vault, repeat the same four-step sequence.
+Every time you sit down to work with the repository, repeat the same four-step sequence.
 
 **Step 1: Pull (get fresh stuff, 5 seconds).**
 
@@ -171,7 +171,7 @@ If you're scared — call a developer, don't touch anything. The file will defin
 
 **Situation 5: "GitHub Desktop wants me to make a branch."**
 
-A branch is a parallel version of the files. For **most vault work this isn't needed** — write directly into main.
+A branch is a parallel version of the files. For **most repository work this isn't needed** — write directly into main.
 
 A branch is only needed if:
 - You're preparing a big draft that shouldn't be visible yet
@@ -184,18 +184,18 @@ In both cases — ask a developer to help create a branch. Once you do it, you'l
 ## 6. What you can and can't do
 
 **Can (and should) freely:**
-- Create new files in `active/features/`
-- Create new files in `log/feedback/` — it's an append-only folder, everyone writes there
-- Create new files in `log/retrospectives/`
-- Update existing feature pages (status, log, description)
-- Add new terms in `stable/glossary.md`
+- Create new files in `features/`
+- Create new files in `journal/feedback/` — it's an append-only folder, everyone writes there
+- Create new files in `journal/retros/`
+- Update existing feature pages (description, links, scope)
+- Add new terms in `GLOSSARY.md`
 
 **Ask a developer before changing:**
-- ADRs (`active/decisions/`) — those are technical decisions; unrequested edits here look odd
-- Technical patterns (`active/patterns/`) — same
-- `COMMON.md` — it's an instruction for AI, requires care
+- ADRs (`decisions/`) — those are technical decisions; unrequested edits here look odd
+- Technical patterns (`patterns/`) — same
+- `AGENTS.md` — it's an instruction for AI, requires care
 - Folder structure (creating new top-level folders)
-- `stable/stack.md`, `stable/team.md` — declarative files
+- `STACK.md`, `TEAM.md` — declarative files
 
 **Don't touch:**
 - Files with extensions `.gitignore`, `.gitattributes` — those are plumbing
@@ -203,7 +203,7 @@ In both cases — ask a developer to help create a branch. Once you do it, you'l
 
 ### 6.1. If the team uses the knowledge module
 
-If your team adopted the knowledge module (the `knowledge/` folder in the vault), it has separate rules. See section 8 of this document.
+If your team adopted the knowledge module (the `knowledge/` folder in the repository), it has separate rules. See section 8 of this document.
 
 ---
 
@@ -212,7 +212,7 @@ If your team adopted the knowledge module (the `knowledge/` folder in the vault)
 If GitHub Desktop feels scary, there's a simpler path: editing directly on github.com.
 
 **How:**
-1. Open the vault repository on GitHub.com
+1. Open the repository on GitHub.com
 2. Click the needed file
 3. Pencil icon (Edit) in the top right
 4. Edit right in the browser
@@ -225,22 +225,22 @@ Downsides:
 
 But for one-off edits like "update feature status" it works great. Especially from mobile.
 
-### 7.1. When the vault is on your phone
+### 7.1. When the repository is on your phone
 
 Sometimes you need to note a thought or feedback when there's no computer.
 
 **Options:**
 - **Obsidian Mobile** + Obsidian Git plugin — syncs in background (requires some setup from a developer)
 - **GitHub Mobile app** — you can open the repo, find a file, edit it right in the app
-- **Just write in your phone's notes app**, transfer to the vault in the morning
+- **Just write in your phone's notes app**, transfer to the repository in the morning
 
-Don't turn the vault into a phone task list. Serious work happens at a computer.
+Don't turn the repository into a phone task list. Serious work happens at a computer.
 
 ---
 
 ## 8. How to work with the knowledge module
 
-*This section is only relevant if your team adopted the knowledge module (the `knowledge/` folder in the vault). If not, you can skip it.*
+*This section is only relevant if your team adopted the knowledge module (the `knowledge/` folder in the repository). If not, you can skip it.*
 
 The knowledge module is where the team accumulates **external knowledge**: user interviews, competitor articles, research reports, call transcripts. AI (Claude or Cowork) automatically compiles these into structured wiki pages with cross-references.
 
@@ -296,7 +296,7 @@ Editing the wiki directly — Claude will overwrite your edits next time, and yo
 
 ### 8.3. How to ask questions of the wiki
 
-Through Cowork or Claude Code (ask a developer to show you how to connect Cowork to your vault — it's 5 minutes of setup).
+Through Cowork or Claude Code (ask a developer to show you how to connect Cowork to your repository — it's 5 minutes of setup).
 
 Examples of questions that work:
 - "What do we know about enterprise users? Give a brief description and quotes."
@@ -332,11 +332,11 @@ Full documentation for the knowledge module is in `knowledge.md`. For you as a r
 **1. "I keep forgetting to pull, nothing works."**
 Make it a habit: opened GitHub Desktop → first action is to look at "Pull origin".
 
-**2. "Accumulated 30 changes and committed them all as 'update vault'."**
+**2. "Accumulated 30 changes and committed them all as 'update repo'."**
 Small frequent commits — good. One big commit without description — bad. A month later nobody (including you) will remember what was in it.
 
 **3. "I changed something in a developer's code, because 'well, it's just markdown'."**
-The vault — yes, your zone. The code repositories — no. If something needs changing in a code repo's README — ask a developer.
+The shared repository — yes, your zone. Code repositories — no. If something needs changing in a code repo's README — ask a developer.
 
 **4. "I'm afraid to click something wrong and break everything."**
 In git it's practically impossible to break something irreversibly. Any action can be undone. Ask, don't sit in fear.
