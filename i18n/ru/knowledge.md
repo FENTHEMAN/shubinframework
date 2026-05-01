@@ -1,8 +1,10 @@
 # Shubin Framework: Knowledge Module
 
+> **TODO (v2):** этот перевод отстал от английского `knowledge.md`. В v2 пути обновлены (`vault/active/decisions/` → `decisions/`, `log/feedback/` → `journal/feedback/`, и т.д.), `CLAUDE.md` модуля переименован в `AGENTS.md`. Содержательно метод Карпати без изменений. До пересинхронизации источник истины — корневой `knowledge.md`.
+
 **Полное название:** LLM-wiki для команд по методу Карпати
 **Часть:** Shubin Framework (companion document)
-**Версия:** 1.0
+**Версия:** 1.0 (устаревшая, см. TODO выше)
 
 **Для кого:** любой член команды — разработчик, PM, дизайнер, CEO, доменный эксперт. Не требуется технический опыт. Если вы умеете писать в markdown и нажимать commit в GitHub Desktop — этого достаточно.
 

@@ -1,8 +1,10 @@
 # Shubin Framework: Non-engineering concerns
 
+> **TODO (v2):** этот перевод отстал от английского `non-engineering.md`. В v2 пути обновлены (`active/decisions/` → `decisions/`, `stable/events.md` → `events.md` в корне, `log/incidents/` → `journal/incidents/`, и т.д.) и cross-references на главы `framework.md` сдвинуты под новую нумерацию. Содержательно остальное прежнее. До пересинхронизации источник истины — корневой `non-engineering.md`.
+
 **Полное название:** Минимум по Finance, Legal, Security, Data и Support для команды 2–8
 **Часть:** Shubin Framework (companion document)
-**Версия:** 1.0
+**Версия:** 1.0 (устаревшая, см. TODO выше)
 
 **Для кого:** tech lead или founder команды 2–8 человек, которая до PMF и стабильного traction. Документ отвечает на вопрос «что минимально надо сделать в этих зонах, чтобы не попасть в катастрофу, и что можно отложить».
 
