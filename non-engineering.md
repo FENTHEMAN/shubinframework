@@ -2,7 +2,7 @@
 
 **Full title:** Minimum on Finance, Legal, Security, Data and Support for a team of 2–8
 **Part of:** Shubin Framework (companion document)
-**Version:** 1.0
+**Version:** 2.0
 
 **Who it's for:** tech lead or founder of a 2–8 team pre-PMF and pre-stable-traction. The document answers: "what's the minimum I need to do in these areas to avoid catastrophe, and what can be deferred".
 
@@ -31,7 +31,7 @@ This document is about the middle path. A minimum that actually protects, withou
 
 What you actually need:
 
-**Table of all service subscriptions** in the vault or in Google Sheets. What you pay, how much, to whom, when renewal, who owns it. Reviewed quarterly.
+**Table of all service subscriptions** in the repository or in Google Sheets. What you pay, how much, to whom, when renewal, who owns it. Reviewed quarterly.
 
 ```markdown
 | Service | Plan | $/month | Owner | Purpose | Renewal |
@@ -44,7 +44,7 @@ What you actually need:
 
 **Unit economics at pre-PMF stage** is fantasy with two unknowns. You don't know LTV without stable churn history, true CAC without a stable funnel. Don't spend time on beautiful LTV/CAC = 6.2x until real stable churn exists. Pre-PMF, knowing ARPU, gross margin, burn is enough. That's sufficient for sanity checks.
 
-**Significant financial decisions** (pricing, major spending) are ADRs. See `framework.md` chapter 3.
+**Significant financial decisions** (pricing, major spending) are ADRs. See `framework.md` chapter 4.
 
 ---
 
@@ -99,14 +99,14 @@ Advice like "rotate every 90 days" sounds great, but in a team of 4 it gets skip
 
 ### 3.3. Incident response
 
-Minimum process (written in `log/incidents/README.md`):
+Minimum process (written in `journal/incidents/README.md`):
 1. Who can declare an incident (any team member)
 2. Who becomes the owner (usually tech lead)
 3. Communication channel (separate Slack channel during an incident)
 4. Priorities: contain → eradicate → recover → learn
 5. Postmortem within 72 hours — mandatory, blameless
 
-Each incident → entry in `log/incidents/YYYY-MM-DD-name.md` with timeline, root cause, prevention.
+Each incident → entry in `journal/incidents/YYYY-MM-DD-name.md` with timeline, root cause, prevention.
 
 ### 3.4. What NOT to do yet
 
@@ -122,7 +122,7 @@ Exceptions (when the security minimum is larger): fintech, medtech, any handling
 
 Without it, six months later you have a dump of `user_signup`, `user_signed_up`, `signup_completed`, `new_user_registered` — all of different ages and slightly different semantics. Nobody remembers how they differ. Analytics lies.
 
-Put in `stable/events.md`:
+Put in `events.md` at the repository root:
 
 ```markdown
 # Event Taxonomy
@@ -159,7 +159,7 @@ One product analytics, not three. Otherwise data diverges.
 
 ### 4.3. North Star and supporting
 
-`stable/north-star.md` — **one** main metric, 3–5 leading indicators. Not 15. Fifteen metrics is the absence of metrics.
+`north-star.md` at the repository root — **one** main metric, 3–5 leading indicators. Not 15. Fifteen metrics is the absence of metrics.
 
 North Star examples:
 - SaaS: Weekly Active Users engaged in the core action
@@ -190,12 +190,12 @@ For analytics at MVP stage, PostHog built-in dashboards + ad-hoc SQL when needed
 
 ### 5.2. Feedback loop — mandatory
 
-The most important thing from support is **the link to the product**. Support sees more user pain than PM and developers combined. That pain needs to make it into the vault.
+The most important thing from support is **the link to the product**. Support sees more user pain than PM and developers combined. That pain needs to make it into the repository.
 
 Workflow:
 1. Support agent receives a ticket.
-2. If it's a signal (not one-off), creates an entry in `log/feedback/YYYY-MM-DD-<theme>.md` with description and link to the ticket.
-3. Once a week the PM scans these files and turns patterns into hypotheses in `active/features/` or in the wiki (if the knowledge module is in use).
+2. If it's a signal (not one-off), creates an entry in `journal/feedback/YYYY-MM-DD-<theme>.md` with description and link to the ticket.
+3. Once a week the PM scans these files and turns patterns into hypotheses in `features/` (tracked as GitHub Issues) or in the wiki (if the knowledge module is in use).
 
 Without this loop, you build features blind.
 
@@ -234,7 +234,7 @@ For a 2–8 team at pre-PMF stage — no compliance program. Compliance requirem
 The only things worth doing proactively:
 - **GDPR data export/deletion** — if EU users (see Legal)
 - **Subprocessors list** — all parties you pass data to (Vercel, Supabase, PostHog, etc). Needed for the first enterprise client and for a correct privacy policy.
-- **Access log for production secrets** — who and when looked at prod secrets. Simple table in the vault, updated on each access.
+- **Access log for production secrets** — who and when looked at prod secrets. Simple table in the repository, updated on each access.
 
 Everything else (SOC 2, ISO, HIPAA) — when a specific client asks.
 
@@ -242,20 +242,20 @@ Everything else (SOC 2, ISO, HIPAA) — when a specific client asks.
 
 ## 7. Integration with the main framework
 
-- **Financial, Legal, Security ADRs** live in common `active/decisions/`, numbered sequentially with technical ones.
-- **Event taxonomy** — in `stable/events.md`.
-- **Subscriptions table** — either in `stable/subscriptions.md` or in a separate Google Sheet with a link.
-- **Incidents** — in `log/incidents/`.
-- **Feedback from support** — in `log/feedback/`.
-- **Security guides**, if they grow, — in `active/patterns/security/`.
+- **Financial, Legal, Security ADRs** live in common `decisions/`, numbered sequentially with technical ones.
+- **Event taxonomy** — in `events.md` at the repository root.
+- **Subscriptions table** — either in `subscriptions.md` at the root or in a separate Google Sheet with a link.
+- **Incidents** — in `journal/incidents/`.
+- **Feedback from support** — in `journal/feedback/`.
+- **Security guides**, if they grow — in `patterns/security/`.
 
-All of this fits organically into the `stable/active/log/` structure. No need to create separate top-level folders `finance/`, `legal/`, `security/` — that's cargo cult.
+All of this fits organically into the existing root + `journal/` structure. No need to create separate top-level folders `finance/`, `legal/`, `security/` — that's cargo cult.
 
 ---
 
 ## 8. Quarterly review
 
-Once a quarter during the strategy offsite (see `framework.md` chapter 10) — 30 minutes on non-engineering concerns:
+Once a quarter during the strategy offsite (see `framework.md` chapter 11) — 30 minutes on non-engineering concerns:
 
 - Subscriptions table — anything to cancel
 - Runway — where we are
