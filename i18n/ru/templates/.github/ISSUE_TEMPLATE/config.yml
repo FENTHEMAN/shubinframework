@@ -3,3 +3,6 @@ contact_links:
   - name: Discussion
     url: https://github.com/your-org/your-repo/discussions
     about: Для вопросов и идей до того, как они станут Issues
+  - name: Docs repo
+    url: https://github.com/your-org/your-product-vault
+    about: Архитектура, решения (ADR), паттерны, глоссарий
