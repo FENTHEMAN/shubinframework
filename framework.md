@@ -315,7 +315,40 @@ The link from an Issue to an ADR is one-directional: the Issue body links to the
 
 Markdown holds **knowledge**. GitHub holds **workflow**. The hard rule is that no markdown file mirrors Issue state. A file at `features/<slug>.md` that re-stated the Issue's body would diverge from the Issue within days; a file without state would duplicate it. Either way the second copy decays. Removing the markdown layer entirely closes the dilemma.
 
-### 4.2. ADR
+### 4.2. Where Issues live
+
+A second routing question: in which repository does the Issue belong? One rule:
+
+```
+if affected parts > 1:
+    main Issue → docs (vault) repo
+    sub-issues → each respective code/design repo
+else:
+    Issue → repo where the work merges
+```
+
+A "part" is an area for which a separate tracking artifact (Issue, sub-issue, Project item) is created. Typical parts: frontend (one SPA = one part; three frontends = three parts), backend (one service = one part), mobile (iOS+Android shared = one part; otherwise two), infra (only if there's a separate infra repo), and design when it's treated as a sub-issue with explicit Done-when.
+
+What is **not** a part: documentation in the docs repo (almost any feature touches docs; treating that as a part puts every Issue in the docs repo); tests (part of the code repo they cover); a Figma link without its own sub-issue.
+
+ADRs always live in `decisions/` of the docs repo, regardless of how many parts the feature touches — ADRs are decisions, not tracking. Most ADRs don't need a tracking Issue: the PR is the discussion, the merge is the decision. Open an Issue for an ADR initiative only when the topic is large enough to plan separately ("rewrite all ADRs to a new template", "decide the persistence layer across three services").
+
+A docs-repo Issue is appropriate when the work is docs-only (writing a guide, fixing `GLOSSARY.md`, translating); or when it's multi-month and touches architecture or stack significantly; or when it spans more than one code repo — cross-cutting (4.3).
+
+### 4.3. Cross-cutting features
+
+A feature touching frontend + backend, or backend + mobile, or any combination of two or more parts, follows a slightly heavier flow.
+
+1. **Main Issue.** Opened in the docs repo using the "Cross-cutting feature" template. The body carries scope, success criteria, links to ADRs, and a list of sub-issues.
+2. **Sub-issues.** One per part, each in its own code repo, using the Sub-issue template. Each sub-issue references the parent main Issue.
+3. **Linking.** Sub-issues use GitHub's native sub-issue feature (up to 8 levels deep, GA since March 2026). Within a single repo, parent–child links are automatic. **Cross-repo sub-issues are not auto-linked by GitHub:** the parent uses markdown checkboxes (`- [ ] acme-frontend#142`) ticked manually on close, or — better — is added to a Projects v2 board where the hierarchy view aggregates them across repos (chapter 12).
+4. **ADRs** are docs-repo PRs without separate Issues. The main Issue's Decisions section links to merged ADRs. Sub-issues may copy those links for convenience.
+5. **Design** is either a Figma link in the main Issue's Design section (small features), closed informally when the designer comments "design final"; or a sub-issue with explicit Done-when (large design work).
+6. **Closing the main Issue** is manual: the owner verifies all sub-issues are closed and the relevant docs PRs (ADRs, `ARCHITECTURE.md` updates) are merged.
+
+For teams running cross-cutting features regularly, **GitHub Projects v2** is essentially required — see chapter 12 for the overview and `projects.md` for the full integration spec.
+
+### 4.4. ADR
 
 Architectural Decision Record — a document about a decision that is hard to reverse, affects several parts of the system, and will need explaining three months from now.
 
@@ -358,7 +391,7 @@ Numbering is sequential and never reset. Outdated ADRs get status `Deprecated` o
 
 If the team uses the knowledge module, an ADR can optionally include a **Research context** section linking to `knowledge/wiki/personas/` and `knowledge/wiki/competitors/` — this gives traceability to the actual interviews and research.
 
-### 4.3. ADR-first — the ideal we aim for
+### 4.5. ADR-first — the ideal we aim for
 
 Ideally a significant decision starts with a PR changing only the ADR. Discussion, approval, merge. Then code.
 
@@ -395,7 +428,7 @@ Comments on the Issue. PM and one developer sanity-check scope and success crite
 
 ### 5.4. Step 3 — ADR (if needed)
 
-Triggered when the work involves a real choice between options with significant trade-offs (chapter 4.2's reversibility heuristic). The developer who'll implement it opens a PR to the markdown repo with `decisions/NNNN-<slug>.md` following the ADR template. Reviewers comment on the PR. Merge when accepted.
+Triggered when the work involves a real choice between options with significant trade-offs (chapter 4.4's reversibility heuristic). The developer who'll implement it opens a PR to the markdown repo with `decisions/NNNN-<slug>.md` following the ADR template. Reviewers comment on the PR. Merge when accepted.
 
 The ADR is then linked back from the Issue body's `## Decisions` section. The link is one-directional: the Issue points to the ADR, the ADR does not need to mention the Issue.
 
