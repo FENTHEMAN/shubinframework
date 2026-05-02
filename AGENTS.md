@@ -31,7 +31,7 @@ Before suggesting any structural change, read the Invariants section of
 - Propose changes to spec documents (`framework.md`, `lite.md`,
   `knowledge.md`, `non-tech.md`, `non-engineering.md`) when asked.
 - Help write new ADRs when the user describes a decision worth recording.
-  Use the format from `framework.md` chapter 4.2.
+  Use the format from `framework.md` chapter 4.4.
 - Update cross-references when files move, when chapters renumber, or
   when a section is renamed.
 - Keep the Russian translation in `i18n/ru/` in mind: a change in a root
@@ -60,7 +60,7 @@ Before suggesting any structural change, read the Invariants section of
 
 ## ADR style
 
-When writing an ADR, use the format from `framework.md` chapter 4.2:
+When writing an ADR, use the format from `framework.md` chapter 4.4:
 
 - `# ADR-NNNN: <short decision title>`
 - `## Status` — `Accepted — YYYY-MM-DD`, or `Superseded by ADR-NNNN`
