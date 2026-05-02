@@ -8,11 +8,13 @@
 
 ## Что это
 
-Набор практик, в которых единый markdown-репозиторий используется как **общий контекст команды** — его одинаково читают и люди, и AI-агенты (Claude Code, Cowork). Markdown несёт спецификацию; GitHub несёт состояние. В markdown — решения, feature-спеки и паттерны, которые не меняются каждый день. В Issues, Milestones и timeline'ах PR — статус, ownership, приоритет, прогресс.
+Две упрямые проблемы возникают в любой маленькой команде, работающей с AI-агентами: у агентов нет памяти между сессиями, а люди дрейфуют из контекста по мере роста проекта. Shubin Framework — набор конвенций, решающих обе через три скоординированных слоя без какого-либо кастомного тулинга.
 
-В маленьких командах, ежедневно работающих с AI-агентами, две боли приходят парой. Сессии стартуют с нуля, и вчерашние решения завтра приходится объяснять заново. Через три месяца никто не помнит, почему API возвращает camelCase или почему онбординг в четыре шага, а не в один. Это одна и та же проблема: контекст команды живёт в головах. Shubin Framework переносит его в одно место, читаемое и людьми, и агентами.
+Первый слой — **markdown-репозиторий** с устойчивым знанием: решения (ADR), паттерны, архитектура, глоссарий, журнал фидбека и инцидентов и опциональная AI-compiled доменная wiki. То, что хочется, чтобы новый сотрудник — или новый агент — прочёл в первый день. Второй слой — **GitHub Issues, Milestones и Projects v2**, где живёт workflow: фичи, sub-issues, cross-repo dependencies, спринт-каденс, roadmap. Третий — **AI-агент**, периодически компилирующий wiki из источников: вручную курируемого `knowledge/raw/` и реального GitHub-workflow команды (закрытые Issues, смерженные PR, новые ADR, журнальные записи).
 
-Ядро — классическая engineering-практика: ADR, feature-спеки, паттерны, runbooks, журнал фидбека и инцидентов. Опциональный модуль `knowledge/` реализует метод Андрея Карпати «LLM wiki», где LLM сам поддерживает compiled-страницы из raw-источников. Эти два слоя независимы: ядро можно внедрить без модуля, а можно вместе.
+Markdown держит спецификацию. GitHub держит состояние. Агент компилирует мост. Конвенции читаются людьми и агентами одинаково.
+
+Это документация, не инструмент. Адаптируйте layout и правила; фреймворк станет тем, что команда реально из него делает.
 
 ## Для кого
 
@@ -32,12 +34,19 @@ CHANGELOG.md           история релизов
 
 framework.md           полная спецификация для tech lead'ов
 lite.md                вариант для соло и команд 1–2 человека
-knowledge.md           модуль LLM-wiki по методу Карпати
+knowledge.md           модуль LLM-wiki по методу Карпати + auto-ingest spec
+projects.md            спецификация интеграции GitHub Projects v2
 non-tech.md            git и репозиторий без терминала
 non-engineering.md     минимум по Finance / Legal / Security / Data / Support
 
-guides/                развёрнутые примеры (например, walkthrough feature-цикла)
+decisions/             ADR (иммутабельны, последовательная нумерация)  — adopting team
+patterns/              инженерные паттерны                              — adopting team
+journal/               feedback, incidents, retros (append-only)        — adopting team
+knowledge/             raw-источники + AI-compiled wiki                 — adopting team
+
+guides/                развёрнутые примеры (walkthrough feature-цикла и т.п.)
 conventions/           cross-cutting конвенции для контрибьюторов
+templates/             файлы, которые adopting team копирует (Issue Templates, knowledge/AGENTS.md)
 i18n/ru/               русские переводы
 ```
 
@@ -51,8 +60,9 @@ i18n/ru/               русские переводы
 |---|---|
 | Соло или команда 1–2 человек на MVP | [`lite.md`](./i18n/ru/lite.md) |
 | Tech lead команды 3–8, настройка с нуля | [`framework.md`](./i18n/ru/framework.md) |
+| Настройка GitHub Projects v2 для cross-repo planning | [`projects.md`](./i18n/ru/projects.md) |
+| Подключение AI knowledge wiki (модуль Карпати + auto-ingest) | [`knowledge.md`](./i18n/ru/knowledge.md) |
 | PM, дизайнер или CEO в команде, уже внедрившей фреймворк | [`non-tech.md`](./i18n/ru/non-tech.md) |
-| Команда, которая накапливает user research или competitive intel | [`knowledge.md`](./i18n/ru/knowledge.md) |
 | Founder, приближается первый enterprise-клиент | [`non-engineering.md`](./i18n/ru/non-engineering.md) |
 
 ## Честные предупреждения

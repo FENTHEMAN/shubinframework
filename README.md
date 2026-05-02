@@ -8,11 +8,13 @@
 
 ## What this is
 
-A set of practices for treating a single markdown repository as **shared team context** — read equally by humans and AI agents (Claude Code, Cowork). The repository holds the spec; GitHub holds the state. Markdown carries decisions, feature specs, and patterns that don't change every day. Issues, milestones, and PR timelines carry status, ownership, priority, and progress.
+Two stubborn problems show up in any small team using AI agents: agents have no memory across sessions, and humans drift out of context as the project grows. Shubin Framework is a set of conventions for solving both with three coordinated layers, no custom tooling required.
 
-Two pains show up together in small teams that work with AI agents day to day. Sessions start from scratch and yesterday's decisions need re-explaining tomorrow. Three months in nobody remembers why the API returns camelCase or why onboarding has four steps and not one. Both are the same problem: context lives in people's heads. Shubin Framework moves it into one place that both humans and agents can read.
+The first layer is a **markdown repository** holding durable knowledge: decisions (ADRs), patterns, architecture, glossary, a journal of feedback and incidents, and an optional AI-compiled domain wiki. Things you'd want a new hire — or a new agent — to read on day one. The second layer is **GitHub Issues, Milestones, and Projects v2**, where the live workflow happens: features, sub-issues, cross-repo dependencies, sprint cadence, roadmap. The third is an **AI agent** that periodically compiles the wiki from sources — both the manually curated `knowledge/raw/` and the team's actual GitHub workflow (closed Issues, merged PRs, new ADRs, journal entries).
 
-The core is classical engineering practice — ADRs, feature specs, patterns, runbooks, a journal of feedback and incidents. An optional `knowledge/` module implements Andrej Karpathy's "LLM wiki" method, where the LLM maintains compiled research pages from raw sources. The two are independent; adopt the core without the module, or both.
+Markdown holds the spec. GitHub holds the state. The agent compiles the bridge. The conventions are read by humans and agents equally.
+
+This is documentation, not a tool. Adopt the layout and the rules; the framework becomes whatever your team actually does with it.
 
 ## Who this is for
 
@@ -32,12 +34,19 @@ CHANGELOG.md           release history
 
 framework.md           full specification, for tech leads
 lite.md                solo and 1–2 person variant
-knowledge.md           Karpathy LLM-wiki module
+knowledge.md           Karpathy LLM-wiki module + auto-ingest spec
+projects.md            GitHub Projects v2 integration spec
 non-tech.md            git and the repository without the terminal
 non-engineering.md     Finance / Legal / Security / Data / Support minimum
 
+decisions/             ADRs (immutable, sequentially numbered)        — adopting team
+patterns/              engineering patterns                            — adopting team
+journal/               feedback, incidents, retros (append-only)       — adopting team
+knowledge/             raw sources + AI-compiled wiki                  — adopting team
+
 guides/                long-form examples (e.g. feature cycle walkthrough)
 conventions/           cross-cutting conventions for contributors
+templates/             files an adopting team copies (Issue Templates, knowledge/AGENTS.md)
 i18n/ru/               Russian translations
 ```
 
@@ -51,8 +60,9 @@ Pick the document matching your situation. Don't read all of them at once — ea
 |---|---|
 | Solo or 1–2 person team on MVP | [`lite.md`](./lite.md) |
 | Tech lead of a 3–8 team setting up from scratch | [`framework.md`](./framework.md) |
+| Setting up GitHub Projects v2 for cross-repo planning | [`projects.md`](./projects.md) |
+| Adding the AI knowledge wiki (Karpathy module + auto-ingest) | [`knowledge.md`](./knowledge.md) |
 | PM, designer, or CEO joining a team that already adopted it | [`non-tech.md`](./non-tech.md) |
-| Team accumulating user research or competitive intel | [`knowledge.md`](./knowledge.md) |
 | Founder facing the first enterprise customer | [`non-engineering.md`](./non-engineering.md) |
 
 ## Honest warnings
