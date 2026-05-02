@@ -96,7 +96,7 @@ The module lives in a separate document: `knowledge.md`. Connect it if your team
 
 ### 2.1. Minimum structure to start
 
-Don't create twelve folders on day one. Start with the canon files in root and three working directories plus the journal:
+Don't create twelve folders on day one. Start with the canon files in root and two working directories plus the journal:
 
 ```
 your-product/
@@ -108,7 +108,6 @@ your-product/
 ├── README.md
 │
 ├── decisions/            ADRs, sequentially numbered
-├── features/             one folder per feature
 ├── patterns/             accumulated engineering patterns
 │
 └── journal/              append-only
@@ -116,6 +115,8 @@ your-product/
     ├── incidents/        postmortems
     └── retros/           weekly and quarterly retro summaries
 ```
+
+Notice what is *not* here: a `features/` directory. Features live in GitHub Issues, not in markdown — see chapter 4.1.
 
 Optional: `knowledge/` (LLM wiki module, see `knowledge.md`); `guides/` (long-form examples and team-specific recipes); `runbooks/` (incident playbooks).
 
@@ -127,7 +128,7 @@ Three deliberate choices.
 
 **Flat root over nested wrappers.** No `vault/` or any other catch-all directory. The repository itself is the wrapper. A redundant prefix on every path adds noise without information; tools like `grep` and `git log` work cleaner when the structure is flat.
 
-**UPPER_CASE for canon, lower_case for working directories.** A contributor scanning the root should be able to spot meta-documents (`ARCHITECTURE.md`, `STACK.md`, `GLOSSARY.md`, `AGENTS.md`) without reading filenames carefully. Working directories — `decisions/`, `features/`, `patterns/`, `journal/` — are lowercase because they are *contents*, not canon.
+**UPPER_CASE for canon, lower_case for working directories.** A contributor scanning the root should be able to spot meta-documents (`ARCHITECTURE.md`, `STACK.md`, `GLOSSARY.md`, `AGENTS.md`) without reading filenames carefully. Working directories — `decisions/`, `patterns/`, `journal/` — are lowercase because they are *contents*, not canon.
 
 **Change-mode classification over domain classification.** `journal/` is named for behavior (an append-only chronicle), not for content type. The alternative — `product/`, `engineering/`, `design/` — associates with org roles and provokes silos: "that's from engineering, I don't touch it". The change-mode scheme reflects Principle 1 directly.
 
@@ -137,7 +138,7 @@ If your team comes from an established Notion space with domain naming, an alter
 
 **Root canon files** rarely change. `ARCHITECTURE.md` — a high-level map of the product, bird's-eye view, module boundaries, invariants; matklad-style, prose-first, kept under ~300 lines. `STACK.md` — chosen tech stack with one-line reasons. `GLOSSARY.md` — domain terms shared by the whole team; module-specific terms go in module glossaries (chapter 3). `TEAM.md` — who owns what (optional in a 2–3 person team). `AGENTS.md` — rules for AI agents (see 2.5).
 
-**Working directories** change actively. `decisions/` — ADRs, sequentially numbered (`0001-...md`); numbering never resets, no subfolders. `features/` — one folder per feature, `features/<slug>/index.md` plus optional supporting files; stateless specs (chapter 4.1). `patterns/` — engineering code patterns and gotchas, born from real recurrence (chapter 7.4).
+**Working directories** change actively. `decisions/` — ADRs, sequentially numbered (`0001-...md`); numbering never resets, no subfolders. `patterns/` — engineering code patterns and gotchas, born from real recurrence (chapter 7.4). Features deliberately have no working directory: each feature is a GitHub Issue, not a markdown file (chapter 4.1).
 
 **Journal** is append-only — entries are dated and never edited. `journal/feedback/` carries files like `2026-04-18-user-X-interview.md`; `journal/incidents/` carries postmortems; `journal/retros/` carries weekly and quarterly retro summaries.
 
@@ -161,14 +162,16 @@ Minimal example:
 ## Structure
 
 - decisions/ — ADRs, immutable after Accepted
-- features/ — feature specs, stateless (state in linked GitHub Issues)
 - patterns/ — engineering patterns, mutable
 - journal/ — append-only history, never edit
 - knowledge/ — optional LLM wiki module (see knowledge/AGENTS.md)
 
+Features live in GitHub Issues, not in this repo. The Issue is
+the spec; an Issue Template enforces the structure.
+
 ## When writing code
 
-1. Read features/<current-feature>/index.md
+1. Read the linked GitHub Issue for the feature in flight
 2. Check decisions/ for relevant ADRs
 3. Check patterns/ for similar patterns
 4. On a new significant decision — propose creating an ADR
@@ -182,7 +185,7 @@ Don't create files silently.
 ## What not to do
 
 - Don't edit journal/ (append-only)
-- Don't add status/owner/priority frontmatter to features/ — that lives in GitHub Issues
+- Don't create a markdown spec page for a feature — the Issue is the spec
 - Don't create empty folders "for the future"
 - Don't work with knowledge/ under general rules — it has its own AGENTS.md
 ```
@@ -228,18 +231,18 @@ product/
 ├── ARCHITECTURE.md           map of the system and module boundaries
 ├── GLOSSARY.md               cross-module terms only
 ├── decisions/                cross-module ADRs
-├── features/                 cross-module feature specs
+├── patterns/                 cross-module patterns
 ├── modules/
 │   ├── transactions/
 │   │   ├── ARCHITECTURE.md   module internals
 │   │   ├── GLOSSARY.md       authorize/capture/refund — only here
 │   │   ├── decisions/
-│   │   └── features/
+│   │   └── patterns/
 │   └── notifications/
 │       └── ...
 ```
 
-One repository, two layers: the root carries cross-module context; each module carries its own.
+One repository, two layers: the root carries cross-module context; each module carries its own. Features still live in GitHub Issues — typically in the code repo of the relevant module; cross-module work opens parallel Issues with explicit links between them.
 
 ### 3.5. Routing rule
 
@@ -263,46 +266,55 @@ If a pattern recurs in three modules, lift it to root `patterns/`. Otherwise it 
 
 ## 4. Unit of work: Feature + ADR
 
-### 4.1. Feature as a stateless spec page
+### 4.1. Feature as a GitHub Issue
 
-Each feature lives in `features/<slug>/index.md` as a **stateless specification**:
+Each feature is a **GitHub Issue** in the relevant code repository. There is no markdown spec page in this repository, and there is no `features/` directory.
+
+For P0 and P1 features, an Issue Template enforces the structure. The template lives at `.github/ISSUE_TEMPLATE/feature.md` in each code repo:
 
 ```markdown
-# User Auth
-
-**Tracking:** [#123](https://github.com/your-org/product/issues/123)
-
 ## Why
-
-One sentence on why this is needed and for whom.
+One paragraph: who is affected, what problem this solves, why now.
 
 ## Scope
-
-What we're building. Boundaries: what we're NOT doing.
+Boundaries: what we ARE building. What we are NOT building.
 
 ## Success criteria
-
-Measurable check that the task is done.
+Measurable check that the feature is done. One bullet per criterion.
 
 ## Decisions
-
-- ADR-0015: auth strategy
+Links to ADRs in the markdown repo:
+- [ADR-0024: OAuth library choice](../../<markdown-repo>/decisions/0024-oauth-library.md)
 
 ## Design
-
-Link to a Figma frame.
+Link to a Figma frame, if applicable.
 ```
 
-Notice what is **not** here: status, owner, priority, dates, implementation log, PR links. All of this is state, and state lives in GitHub:
+For P2 work and bug fixes the template is optional.
 
-- **Status, ownership, priority, dates** — fields on the tracking issue.
-- **Progress timeline** — issue comments and the Linked PRs panel.
-- **Decomposition into tasks** — sub-issues or task lists in the issue body.
-- **Sprint or iteration** — the milestone the issue is in.
+What an Issue gives you natively, with no markdown:
 
-Markdown holds **what we are building and why**. GitHub holds **where it is now**.
+- **Status** — open / closed.
+- **Owner** — assignee.
+- **Priority** — labels (`P0`, `P1`, `P2`).
+- **Created and target dates** — `created_at` plus the milestone's due date.
+- **Progress timeline** — comments and the Linked Pull Requests panel.
+- **Decomposition** — sub-issues or task lists in the body.
+- **Iteration** — milestone.
+- **Discussion** — comments.
 
-This separation prevents the most common rot in markdown trackers: a feature page saying `status: in-progress` six months after the work shipped. There is exactly one source of truth for state (the issue) and exactly one for the spec (the markdown). One link — `**Tracking:**` — connects them.
+When the implementing PR merges with `Closes #N`, the Issue auto-closes. The closed Issue is the canonical record of what was built: the original Why, Scope, and Success criteria, the discussion, the linked PRs, and the resolution all in one place.
+
+What lives in markdown rather than in the Issue:
+
+- **Decisions (ADRs)** — immutable; Issues are mutable and can be deleted. An ADR you wrote a year ago must be readable today verbatim, even if the Issue that triggered it has been edited or closed.
+- **Patterns** — reusable engineering knowledge, not tied to any one feature.
+- **Architecture, glossary, stack** — durable knowledge.
+- **Journal** — feedback, incidents, retros: append-only chronicle.
+
+The link from an Issue to an ADR is one-directional: the Issue body links to the ADR file. The ADR does not need to reference the Issue — an ADR may outlive any specific Issue.
+
+Markdown holds **knowledge**. GitHub holds **workflow**. The hard rule is that no markdown file mirrors Issue state. A file at `features/<slug>.md` that re-stated the Issue's body would diverge from the Issue within days; a file without state would duplicate it. Either way the second copy decays. Removing the markdown layer entirely closes the dilemma.
 
 ### 4.2. ADR
 
@@ -343,7 +355,7 @@ Links to features and services.
 
 Numbering is sequential and never reset. Outdated ADRs get status `Deprecated` or `Superseded by ADR-NNNN`.
 
-**ADRs do not get a GitHub Issue for tracking.** An ADR is a unit of *decision history*, not work-in-flight. Its `Status` field (`Accepted`, `Superseded by ADR-NNNN`) is part of the immutable document, not state to track elsewhere. This is the one exception to "state lives in GitHub" — and it is an exception because there is no state, only an immutable record.
+**ADRs do not get a GitHub Issue for tracking.** An ADR is a unit of *decision history*, not work-in-flight. Its `Status` field (`Accepted`, `Superseded by ADR-NNNN`) is part of the immutable document, not state to track elsewhere. This is the one exception to "workflow lives in GitHub, knowledge in markdown" — and it is an exception because an ADR has no workflow, only an immutable record.
 
 If the team uses the knowledge module, an ADR can optionally include a **Research context** section linking to `knowledge/wiki/personas/` and `knowledge/wiki/competitors/` — this gives traceability to the actual interviews and research.
 
@@ -359,62 +371,62 @@ Danger: ADRs for ADRs' sake. Forty ADRs in the first quarter — half of them ab
 
 ## 5. Feature iteration cycle
 
-This is where the repository, Figma, Claude Code, and GitHub converge into a single workflow. The full cycle from idea to production runs through eight steps. Each step has a specific artifact in a specific place.
+The cycle has six steps, not nine. Each step is light because state lives where it naturally belongs (GitHub) and knowledge lives where it persists (markdown). There is no parallel markdown spec to keep in sync with the Issue.
 
 For a worked example with concrete numbers, PRs, and quotes, see `guides/feature-cycle-example.md`.
 
 ### 5.1. Cycle overview
 
-1. **Idea** — open a GitHub Issue and create a draft feature spec at the same time.
-2. **Spec** — fill in Why, Scope, Success criteria in the markdown spec; the issue holds owner, priority, milestone.
-3. **ADR (if needed)** — significant technical decisions get their own document under `decisions/`.
-4. **Design** — Figma frames; link them from the spec's Design section.
-5. **Implementation** — code PR(s) in the product repo, opened against the issue with `Closes #N`.
-6. **Preview + review** — automatic preview environment per PR; designer and PM verify.
-7. **Merge + deploy** — main branch deploys to production; PR merge auto-closes the issue.
-8. **Feedback loop** — measurement two weeks after release; results land in `journal/feedback/`.
+1. **Idea → Issue** — open a GitHub Issue using the Feature Template.
+2. **Discussion (optional)** — comments on the Issue.
+3. **ADR (if needed)** — open a PR to the markdown repo with `decisions/NNNN-<slug>.md`.
+4. **Implementation** — branch, code, PR with `Closes #N`.
+5. **Merge** — PR merges, Issue auto-closes; the closed Issue is the historical record.
+6. **Retrospective signal (if needed)** — entry in `journal/incidents/` or `journal/retros/` if something went wrong.
 
-### 5.2. Step 1 — Idea
+### 5.2. Step 1 — Idea → Issue
 
-A new feature starts with two artifacts opened together. A GitHub Issue with a one-line title and a body that says, in two sentences, what the idea is and links to the spec page (`Spec: features/<slug>/index.md`). And a new folder `features/<slug>/` with `index.md` containing only the title, a `**Tracking:**` link, and a one-sentence Why.
+Anyone — engineer, PM, designer, founder — opens a GitHub Issue using the Feature Template (chapter 4.1). They fill in Why, Scope, and Success criteria. Priority labels and milestone may be set immediately or after discussion. Design links go in the body when ready.
 
-The Issue carries the assignee, priority label, and milestone. The markdown carries the prose. They link to each other.
+The Issue is the spec. There is no separate document, no `features/<slug>/index.md`, and no PR to the markdown repo at this step.
 
-### 5.3. Step 2 — Spec
+### 5.3. Step 2 — Discussion (optional)
 
-The same `index.md` is extended. PM and one developer (for technical realism) fill in Scope and Success criteria. The designer joins for UX-heavy features. When the PR with the spec is merged, the work is *validated* — but you don't write that word anywhere. The label on the issue (or its absence) is the source of truth for state.
+Comments on the Issue. PM and one developer sanity-check scope and success criteria; the designer joins for UX-heavy features. If the discussion produces a non-trivial technical decision, go to step 3. Otherwise, skip.
 
 ### 5.4. Step 3 — ADR (if needed)
 
-Triggered when the spec contains a non-trivial technical decision affecting more than one part of the system. The developer who'll implement it writes the ADR under `decisions/00NN-<slug>.md` and references it from the spec's `## Decisions` section.
+Triggered when the work involves a real choice between options with significant trade-offs (chapter 4.2's reversibility heuristic). The developer who'll implement it opens a PR to the markdown repo with `decisions/NNNN-<slug>.md` following the ADR template. Reviewers comment on the PR. Merge when accepted.
 
-### 5.5. Step 4 — Design
+The ADR is then linked back from the Issue body's `## Decisions` section. The link is one-directional: the Issue points to the ADR, the ADR does not need to mention the Issue.
 
-Designer (or developer with ready-made components) produces frames in the product's Figma project. The spec's `## Design` section gets a link to the Figma file or frame.
+Most features don't require an ADR — don't write one for trivial work. ADR inflation is its own anti-pattern (12.11).
 
-### 5.6. Step 5 — Implementation
+### 5.5. Step 4 — Implementation
 
-The developer creates a branch in the code repository, runs Claude Code with the spec page, ADR, and Figma link as context, generates and reviews code, writes tests for critical logic. The code PR is opened with `Closes #N` so it auto-closes the tracking issue on merge.
+The developer assigns themselves on the Issue, creates a branch in the code repo, runs Claude Code with the Issue body, the linked ADR, and any Figma link as context, generates and reviews code, writes tests for critical logic. The code PR is opened with `Closes #N` so it auto-closes the Issue on merge.
 
-The feature's PR links appear in the issue's "Linked pull requests" panel automatically — no manual editing of the spec page.
+The PR appears automatically in the Issue's Linked Pull Requests panel — no manual cross-linking. If implementation uncovers a need for a new ADR, write it (back to step 3) and link it from the Issue.
 
-### 5.7. Step 6 — Preview and review
+Per push, the PR pipeline runs and a preview environment is deployed if the team has one (chapter 9). Designer and PM verify on the preview; discrepancies become PR comments. Usually 1–3 iterations.
 
-Per push, a preview environment is deployed automatically. The designer compares with Figma; the PM verifies scope. Discrepancies are PR comments. Usually 1–3 iterations.
+### 5.6. Step 5 — Merge
 
-### 5.8. Step 7 — Merge and deploy
+Approve from one or two reviewers, merge to main, automatic deploy to production where applicable. `Closes #N` auto-closes the Issue. The closed Issue — with its original spec, the discussion, the linked PRs, and the resolution — becomes the historical record of the feature.
 
-Approve from one or two reviewers (depending on team size), merge to main, automatic deploy to production. The issue closes automatically via `Closes #N`. No manual status update in the spec page — there is no status in the spec page.
+There is no manual status update anywhere, because there is no status field outside the Issue.
 
-### 5.9. Step 8 — Feedback loop
+### 5.7. Step 6 — Retrospective signal (if needed)
 
-Two weeks after release (per the success criteria from step 2), the PM or designer checks metrics in PostHog, creates `journal/feedback/2026-MM-DD-<slug>-results.md` with numbers, user quotes, and conclusions, and — if changes are needed — opens a new feature with a new issue.
+If something went wrong — incident, missed deadline, scope blow-up, surprising user reaction — open an entry under `journal/incidents/` or `journal/retros/` with a date prefix (e.g. `2026-04-18-<slug>.md`). Reference the Issue and any ADRs.
 
-If the team uses the knowledge module, significant insights from this feedback file flow into the next wiki ingest cycle.
+If the team checks post-release metrics (success criteria, PostHog, user feedback) and the results matter for future work, the same `journal/` directories are the place to write them up. If the team uses the knowledge module, those entries flow into the next wiki ingest cycle.
 
-### 5.10. When reality diverges from plan
+If the feature shipped smoothly and behaved as expected, **no journal entry is needed**. The closed Issue is already the record. Don't write retros for the sake of writing retros.
 
-Typical: at step 5 the developer realizes the approach chosen in the ADR doesn't work. Don't silently change the code and forget the ADR. Do: update the ADR's status to `Superseded by ADR-NNNN`, create the new ADR with the new decision and the reason for rejecting the old one, update `features/<slug>/index.md` if scope changed, and add a comment on the issue. Fifteen minutes. Six months later nobody scratches their head about why the code says one thing and the ADR says another.
+### 5.8. When reality diverges from plan
+
+Typical: in step 4 the developer realises the approach chosen in the ADR doesn't work. Don't silently change the code and forget the ADR. Do: update the original ADR's status to `Superseded by ADR-NNNN`, write the new ADR with the new decision and the reason for rejecting the old one, update the Issue body if scope changed, and leave a comment on the Issue summarising the pivot. Fifteen minutes. Six months later, nobody scratches their head about why the code says one thing and the ADR says another.
 
 ---
 
@@ -424,10 +436,10 @@ Typical: at step 5 the developer realizes the approach chosen in the ADR doesn't
 
 In a 2–8 team, roles are functions, not titles. One person can carry 2–3 roles; what matters is each function being explicit.
 
-| Function    | What it does                 | Owns in the repository                                 |
+| Function    | What it does                 | Owns                                                   |
 |-------------|------------------------------|--------------------------------------------------------|
-| Product     | Holds "why we're doing this" | `features/*` (Why), `journal/feedback/`                |
-| Design      | Visual and UX logic          | `features/*/design`                                    |
+| Product     | Holds "why we're doing this" | Issue Why/Scope/Success criteria, `journal/feedback/`  |
+| Design      | Visual and UX logic          | Figma frames linked from the Issue                     |
 | Engineering | Code and architecture        | `patterns/`, `decisions/`, code repos                  |
 | Ops         | Infra, deploy, incidents     | `runbooks/`, `infra/`                                  |
 
@@ -576,45 +588,51 @@ Antidote: hard separation. Tasks — in GitHub Issues or Linear. Knowledge — i
 
 Storing `status`, `owner`, `priority`, `due_date`, and a hand-typed `## Log` section in markdown frontmatter, when GitHub Issues, Milestones, and PR timelines already track this natively. Symptom: feature pages with `status: in-progress` from three months ago.
 
-Antidote: state lives in the issue, knowledge lives in markdown. Between them, one link: `**Tracking:** #N`.
+Antidote: workflow lives in the Issue, knowledge lives in markdown. No frontmatter holds workflow state.
 
-### 12.7. Vault per tech layer
+### 12.7. Feature page as Issue cache
+
+A markdown file at `features/<slug>/index.md` (or any other path) that "spec-shadows" a GitHub Issue — copying the Why, Scope, and Success criteria from the Issue body into the repo. The intent is usually noble: "we want grep-able specs", "we want to read it without opening a browser", "AI agents can find it more easily". The result is guaranteed rot: as soon as the Issue body is edited and the markdown isn't, the two sources disagree, and a reader has no way to know which is current.
+
+Antidote: features live only in Issues. There is no markdown layer to drift. AI agents read the Issue through `gh issue view` or the GitHub API; humans read it on github.com. The Issue Template enforces the same fields a markdown skeleton would have, with no second copy to maintain.
+
+### 12.8. Vault per tech layer
 
 A single product is split into `backend-vault/`, `frontend-vault/`, `design-vault/`. Knowledge about a feature is scattered across layers; the team has to triangulate to answer any question.
 
 Antidote: one repository per product. Domain-module split only when two of three triggers fire (chapter 3.3).
 
-### 12.8. Premature module split
+### 12.9. Premature module split
 
 A team of three splits the repository into four modules "because architecturally that's correct". Creates navigation overhead where the actual workflow had none.
 
 Antidote: split only when two of three triggers fire simultaneously. Until then, one repository, flat.
 
-### 12.9. Expensive start
+### 12.10. Expensive start
 
 Team of three, but Kubernetes, microservices, Kafka, data warehouse. Complexity budget exhausted before the first line of business logic.
 
 Antidote: start with a monolith on managed services. Split and complicate on actual pain.
 
-### 12.10. ADR inflation
+### 12.11. ADR inflation
 
 Forty ADRs in the first quarter, half about HTTP client choice.
 
 Antidote: the heuristic "reversible in a day — no ADR needed".
 
-### 12.11. Perfect repository in the first month
+### 12.12. Perfect repository in the first month
 
 The team spends two weeks setting up the structure before writing code.
 
-Antidote: start with three working directories and a few canon files. Expand on demand.
+Antidote: start with two working directories and a few canon files. Expand on demand.
 
-### 12.12. Knowledge without ingest
+### 12.13. Knowledge without ingest
 
 Set up the knowledge module, drop raw sources, never run ingest. The wiki is stale; the team thinks "we have a knowledge base", but in reality they don't.
 
 Antidote: the ingest session is a ritual, not "we'll do it when there's time". See `knowledge.md` section 5.1.
 
-### 12.13. Security/QA/analytics "later"
+### 12.14. Security/QA/analytics "later"
 
 "PMF first, all this later". Result: the first incident or breach becomes catastrophic.
 
@@ -630,10 +648,11 @@ Realistic timelines for a 2–8 team starting from scratch. **Upper-bound estima
 
 Goal: minimal infrastructure and the first feature through the full workflow.
 
-- Repository, root canon files (`STACK.md`, `GLOSSARY.md`, `AGENTS.md`, `README.md`), three working directories (`decisions/`, `features/`, `patterns/`), `journal/`.
+- Repository, root canon files (`STACK.md`, `GLOSSARY.md`, `AGENTS.md`, `README.md`), two working directories (`decisions/`, `patterns/`), `journal/`.
 - First 2–3 ADRs: stack, baseline architecture, monorepo vs polyrepo.
 - Infra: GitHub, frontend hosting, backend hosting, DB, error tracking, secrets manager.
-- First feature in `features/`, taken through the full workflow (chapter 5), with a tracking GitHub Issue and a stateless spec.
+- Issue Template (`.github/ISSUE_TEMPLATE/feature.md`) in each code repo.
+- First feature opened as a GitHub Issue, taken through the full six-step cycle (chapter 5).
 - CI pipeline on PR: lint, type check, tests, preview.
 
 What actually happens: service setup takes longer than planned (the first unexpected quirk eats a day); the first stack ADR is a draft (real understanding comes in 2–3 weeks); the first feature exposes several gaps you'll need to fill.
