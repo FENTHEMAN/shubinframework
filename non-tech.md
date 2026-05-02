@@ -15,13 +15,13 @@
 - What git is, before today
 
 **What you need to know about context:**
-Your team uses a shared markdown repository where the team's knowledge lives (decisions, features, documentation). It's synchronized via git — a system that keeps the history of all changes and lets you work together without conflicts.
+Your team uses a shared markdown repository where the team's knowledge lives — architecture, decisions, glossary, journals, research. It's synchronized via git, a system that keeps the history of all changes and lets you work together without conflicts.
 
-You need to make changes to the repository — add feature descriptions, update statuses, log feedback. This document teaches you how without pain.
+You make changes to that repository — add a glossary term, log an interview, drop a research source, capture feedback. Features themselves do not live in this repository in v2: they are GitHub Issues, opened in the browser. This document teaches you how to handle the repository part without pain; the Issue side is covered in section 6.
 
 **Related documents:**
 - `framework.md` — full framework for the team's tech lead. Optional reading.
-- `knowledge.md` — LLM wiki module. If your team adopted it — you'll need section 8 here.
+- `knowledge.md` — LLM wiki module. If your team adopted it — you'll need section 9 here.
 
 ---
 
@@ -113,7 +113,7 @@ In the bottom-left corner — "Summary" (short description) and "Description" (o
 
 Good summary examples:
 - `add ADR-0024: switch from REST to tRPC`
-- `update onboarding feature: shipped`
+- `glossary: add 'product-led growth' term`
 - `add new pattern: error handling on server`
 - `feedback: 3 user interviews summary`
 
@@ -181,13 +181,29 @@ In both cases — ask a developer to help create a branch. Once you do it, you'l
 
 ---
 
-## 6. What you can and can't do
+## 6. Features live in GitHub Issues, not in the repo
+
+This is the single biggest shift in v2. Features — what is being built, who owns it, what the scope is, what counts as success — live in **GitHub Issues**, not as markdown files in this repository.
+
+When you have a feature idea, you do not create a file. You go to your team's code repository on GitHub.com, click "New Issue", pick the feature template, and fill it in: Why, Scope, Success criteria. That Issue *is* the spec, the tracker, and the discussion. No branch, no commit, no PR from your side. The browser is enough; the GitHub mobile app works too.
+
+Concretely, this means:
+- New idea → open an Issue.
+- Discussion of a feature → in the Issue's comments.
+- Feature shipped → the developer closes the Issue when merging the code PR. You don't mark anything anywhere.
+- Looking for an old feature → search Issues with the closed filter; that's the historical record.
+
+The repository in this document is for **durable knowledge**: ADRs, glossary, architecture, journal, research. GitHub Issues are for **live workflow**. Don't try to mirror Issue state in markdown — that copy will rot within a week.
+
+---
+
+## 7. What you can and can't do in the repo
+
+This section is about the repository on your computer. For features, see section 6 — they don't live here.
 
 **Can (and should) freely:**
-- Create new files in `features/`
 - Create new files in `journal/feedback/` — it's an append-only folder, everyone writes there
 - Create new files in `journal/retros/`
-- Update existing feature pages (description, links, scope)
 - Add new terms in `GLOSSARY.md`
 
 **Ask a developer before changing:**
@@ -203,11 +219,11 @@ In both cases — ask a developer to help create a branch. Once you do it, you'l
 
 ### 6.1. If the team uses the knowledge module
 
-If your team adopted the knowledge module (the `knowledge/` folder in the repository), it has separate rules. See section 8 of this document.
+If your team adopted the knowledge module (the `knowledge/` folder in the repository), it has separate rules. See section 9 of this document.
 
 ---
 
-## 7. Alternative: editing via GitHub web
+## 8. Alternative: editing via GitHub web
 
 If GitHub Desktop feels scary, there's a simpler path: editing directly on github.com.
 
@@ -223,9 +239,9 @@ Downsides:
 - Inconvenient for long edits
 - Can't create files in bulk
 
-But for one-off edits like "update feature status" it works great. Especially from mobile.
+But for one-off edits like adding a glossary term or fixing a typo it works great. Especially from mobile. (For features, you don't need this at all — see section 6.)
 
-### 7.1. When the repository is on your phone
+### 8.1. When the repository is on your phone
 
 Sometimes you need to note a thought or feedback when there's no computer.
 
@@ -238,7 +254,7 @@ Don't turn the repository into a phone task list. Serious work happens at a comp
 
 ---
 
-## 8. How to work with the knowledge module
+## 9. How to work with the knowledge module
 
 *This section is only relevant if your team adopted the knowledge module (the `knowledge/` folder in the repository). If not, you can skip it.*
 
@@ -249,7 +265,7 @@ The knowledge module is where the team accumulates **external knowledge**: user 
 - You'll be able to ask questions like "what do we know about enterprise users?" and get a synthesis from all accumulated sources
 - But there are strict rules you can't break, or the whole system falls apart
 
-### 8.1. How to put sources into raw/
+### 9.1. How to put sources into raw/
 
 You work in the `knowledge/raw/` subfolder. Structure:
 
@@ -282,7 +298,7 @@ Commit with message `raw: <what it is>` — e.g., `raw: Acme Corp discovery inte
 
 Some time later, a developer (or you via Cowork) will run an ingest session, and Claude will add this material to wiki/.
 
-### 8.2. Two iron rules
+### 9.2. Two iron rules
 
 **Rule 1: `knowledge/raw/` — immutable.** Once you've put a file there, **you don't edit its contents**. Found an error? Add a new file with the correction (`2026-04-18-acme-corp-discovery-correction.md`). Don't touch the old one.
 
@@ -294,7 +310,7 @@ This matters because Claude remembers what it compiled from which source. If you
 
 Editing the wiki directly — Claude will overwrite your edits next time, and you'll fight the system.
 
-### 8.3. How to ask questions of the wiki
+### 9.3. How to ask questions of the wiki
 
 Through Cowork or Claude Code (ask a developer to show you how to connect Cowork to your repository — it's 5 minutes of setup).
 
@@ -305,7 +321,7 @@ Examples of questions that work:
 
 Claude goes into `wiki/`, returns an answer with links to raw sources. If a wiki page doesn't exist yet but raw has relevant stuff — Claude usually offers to create the page.
 
-### 8.4. What to do when Claude makes something up
+### 9.4. What to do when Claude makes something up
 
 LLMs sometimes hallucinate — attribute a quote to the wrong interview, make generalizations that aren't in the sources.
 
@@ -316,7 +332,7 @@ If you're reading a wiki page and see a suspicious claim:
 
 Claude will fix it. This is a normal cycle — don't panic.
 
-### 8.5. Minimal ritual
+### 9.5. Minimal ritual
 
 Once a week (or more often if lots of new material) — an ingest session. Usually run by a developer or tech lead. For you, it's enough to:
 - Put new raw/ files in during the week
@@ -327,7 +343,7 @@ Full documentation for the knowledge module is in `knowledge.md`. For you as a r
 
 ---
 
-## 9. Anti-patterns for non-technical users
+## 10. Anti-patterns for non-technical users
 
 **1. "I keep forgetting to pull, nothing works."**
 Make it a habit: opened GitHub Desktop → first action is to look at "Pull origin".
@@ -345,11 +361,11 @@ In git it's practically impossible to break something irreversibly. Any action c
 Better to save half your work than lose it in a crash. Intermediate commits are normal.
 
 **6. "I edit wiki/ directly because there's an error there" (if using the knowledge module).**
-See section 8.2. Never edit `knowledge/wiki/` directly — fix via sources or by asking Claude.
+See section 9.2. Never edit `knowledge/wiki/` directly — fix via sources or by asking Claude.
 
 ---
 
-## 10. Realistic expectations
+## 11. Realistic expectations
 
 **First week:** you'll ask a developer 2–3 times a day. That's normal.
 
