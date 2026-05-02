@@ -517,7 +517,126 @@ Not every feedback item makes it to knowledge. A human decides (usually the PM).
 
 ---
 
-## 10. Final
+## 10. Two orientations of the wiki
+
+The folder layout in chapter 1.1 is the **product-discovery** orientation — pages organised by who or what is being learned about (`personas/`, `concepts/`, `competitors/`, `themes/`). It mirrors Karpathy's original use case: synthesising external sources into linked memory.
+
+A second orientation — **engineering-domain** — is supported in parallel and described in `knowledge/AGENTS.md` (the template shipped at `templates/knowledge/AGENTS.md`). Pages are organised by product domain — `auth.md`, `billing.md`, `onboarding.md`, `notifications.md` — and each page synthesises the ADRs, closed Issues, journal entries, and external sources relevant to that domain. This orientation pays off when the team wants the LLM to remember its **own engineering history** rather than the external world.
+
+Both orientations can coexist in one `wiki/`. Treat them as two folders, or two top-level page sets sharing the same compile mechanism. The wiki's `AGENTS.md` lists which page kinds it maintains and how it routes new sources.
+
+Pick the orientation that matches the team's actual pain. Lots of user research and discovery → start with discovery. Lots of cross-cutting Issues, ADR archaeology, "why did we choose X here" questions → start with engineering domains. Many teams need both by month 6+.
+
+---
+
+## 11. Auto-ingest: broader inputs
+
+The compile run described in chapter 5 reads only `knowledge/raw/`. When the team uses GitHub for workflow (per `framework.md` chapter 4), the agent reads more inputs on each run:
+
+1. **`knowledge/raw/`** — new files since the last run, detected by filename date prefix (`YYYY-MM-DD-<slug>.md`).
+2. **`decisions/`** — new or modified ADRs since the last run, detected via `git log`.
+3. **`journal/`** — new entries in `feedback/`, `incidents/`, and `retros/`.
+4. **Closed Issues and merged PRs** in linked code repositories — via the `gh` CLI or the GitHub API. The list of linked repos lives in `wiki/_meta.md`.
+5. **Project items** if a Project is linked — see chapter 12.
+6. **`patterns/`** — for cross-references; when a wiki page discusses a pattern, link to the pattern file rather than restating it.
+
+The compile-run sequence becomes:
+
+1. Read `wiki/_meta.md` for the last compile date and configuration.
+2. Identify new inputs across all six sources since that date.
+3. For each affected wiki page, update it — add new claims with source links, update `Last compiled` and source counts.
+4. Identify gaps the agent cannot fill from current inputs — record them under an "Open questions" section on the page and in `_meta.md` under "Known issues".
+5. Update `_meta.md` with the new timestamp and a short log line.
+6. Commit to a branch named `wiki/auto-ingest-YYYY-MM-DD`.
+7. Open a PR titled `wiki: weekly compile YYYY-MM-DD` with a summary in the body — domains updated, sources ingested, contradictions flagged.
+8. Stop. A human reviews and merges.
+
+The agent never pushes to `main` directly. PR-with-human-review is invariant — anything else turns the wiki into an unreviewed bot output.
+
+---
+
+## 12. Project integration
+
+When a GitHub Project (see `projects.md`) is linked, the agent uses its custom fields as primary signals:
+
+- **Affected parts** — the strongest signal for assigning a closed Issue to a domain wiki page. An Issue with `Affected parts: [auth, billing]` updates both `auth.md` and `billing.md`.
+- **Iteration** — slices time. The agent can group "what landed in iteration N" on demand.
+- **Type** — separates Feature, Bug, Tech debt, Spike, Doc. Bug history and feature history don't have to mix on the page.
+- **Status** — confirms `Done` versus closed-as-`wontfix`. Only `Done` items contribute to the wiki narrative.
+
+Without a Project, the agent falls back to Issue labels, linked PR file paths, and title keywords. Workable but noisier — domain assignment misses ~10–20% of items in practice.
+
+The agent reads the Project via `gh`:
+
+```
+gh project item-list <number> --owner <org> --format json --limit 200 \
+  --jq '.items[] | {title: .content.title, status: .Status, parts: .["Affected parts"]}'
+```
+
+For larger Projects, paginate or use GraphQL directly.
+
+`wiki/_meta.md` records the Project schema so the agent doesn't re-discover it on every run:
+
+```
+## Linked Project
+- ID: PVT_kwHOAA...
+- Org: acme
+- Number: 1
+
+## Project field schema
+- Status (single-select): Backlog, Ready, In Progress, In Review, Blocked, Done
+- Priority (single-select): P0, P1, P2
+- Affected parts (multi-select): frontend, backend, mobile, design, infra
+- Iteration (iteration field, 2-week sprints)
+- Type (single-select): Feature, Bug, Tech debt, Spike, Doc
+```
+
+---
+
+## 13. Deployment options
+
+Three viable ways to actually run the compile, in increasing investment.
+
+**A. GitHub Action with scheduled trigger.** A workflow at `.github/workflows/wiki-compile.yml` in the docs repo, cron `0 8 * * 1` (Mondays 08:00 UTC) plus `workflow_dispatch` for manual triggers. The workflow runs `claude --headless` (or an equivalent agent CLI) with an instruction to read `knowledge/AGENTS.md` and execute the compile. Required secrets: `ANTHROPIC_API_KEY` and a `GH_PROJECT_TOKEN` with read on the Project and linked repos, write on the docs repo. Pros: fully automated; runs even when no human is around; leaves a PR for review. Cons: setup time; ongoing token costs; more moving pieces when something fails.
+
+**B. Manual local run.** A team member runs Claude Code from their machine on a cadence (weekly). Pros: zero infrastructure; easy to start. Cons: depends on memory; cadence slips when the runner is on holiday; per-run experience varies between team members.
+
+**C. Hybrid.** The Action runs weekly and opens a draft PR. A human reviews, optionally re-runs the compile locally to fix edge cases, then marks the PR ready. The best balance once the team runs more than one product or more than one runner.
+
+Permissions in all three: read on the docs repo, the linked code repos, and the Project; write on the docs repo (for the PR branch). A fine-grained PAT or a GitHub App scoped to the org both work.
+
+---
+
+## 14. End-to-end example
+
+A walkthrough of a fictional team to make the cycle concrete.
+
+**Week 1 (setup).** PM creates `knowledge/AGENTS.md` from the template. Tech lead initialises `wiki/_meta.md` with linked code repos and the Project ID. The team starts dropping into `knowledge/raw/`.
+
+**Weeks 2–4 (accumulation).** Eight raw files land — interviews, two competitor analyses, one industry report. Two ADRs merge. Twelve Issues close across repos, including one cross-cutting feature. One incident postmortem lands in `journal/incidents/`.
+
+**Week 4 (first compile).** The Action runs Monday 08:00. The agent reads everything new since week 1, identifies four engineering domains from `Affected parts` (auth, billing, onboarding, infra), creates four domain wiki pages plus a `personas/small-business-owner.md` synthesised from interviews. PR opens. Tech lead reviews — the `auth` page misclassifies a session-management Issue as `auth`, when it should be `infra` (token storage is at infra layer). Tech lead corrects the page manually, then adds a one-line rule to `knowledge/AGENTS.md`: *"Session-management Issues belong to `infra.md`, not `auth.md`, because token storage is the infra layer."* Future compiles respect it.
+
+**Weeks 5–10.** Each Monday the Action runs and opens a PR. Reviews take ~10 minutes per week. The wiki grows: by week 8 there are seven domain pages, three personas, two competitor pages. Onboarding new hires becomes "read `knowledge/wiki/`" instead of two days of one-on-ones — that is the moment the module starts paying off.
+
+---
+
+## 15. Migration: from no module to having one
+
+For a team not yet using the knowledge module:
+
+1. Create `knowledge/raw/` and `knowledge/wiki/` in the docs repo.
+2. Copy `knowledge/AGENTS.md` from `templates/knowledge/AGENTS.md` of the framework repo. Adapt the linked-repos list and trim source kinds the team doesn't use.
+3. Initialise `wiki/_meta.md`: linked repos, Project ID (if any), empty domain list, empty page list.
+4. **Backfill an afternoon.** Slack screenshots, Notion exports, email threads — drop them into `raw/` with date-prefixed filenames. Quality may be uneven; that's fine. Volume is the asset (chapter 2.4).
+5. **First compile manually** (Option B from chapter 13). Review carefully — this run sets the baseline tone of the wiki and reveals what `AGENTS.md` rules are missing.
+6. After 3–5 wiki pages exist, set up the Action (Option A) or Hybrid (Option C).
+7. Over the next 4–6 weeks, refine `AGENTS.md` rules as the agent makes mistakes. Most happen in the first few runs; the rate drops after.
+8. By week 8 the wiki is a useful onboarding artefact; by week 12 the team relies on it without thinking about it.
+
+---
+
+## 16. Final
 
 The knowledge module is **the only Shubin Framework layer where the LLM doesn't just read but maintains**. This is closest to the original Karpathy idea, and this is where the AI agent delivers an effect that's hard to get by hand: **compilation at scale**.
 
