@@ -2,7 +2,6 @@
 
 **Full title:** LLM wiki for teams, adapted from Karpathy's method
 **Part of:** Shubin Framework (companion document)
-**Version:** 2.0
 
 **Who it's for:** any team member — developer, PM, designer, CEO, domain expert. No technical background required. If you can write markdown and click commit in GitHub Desktop — that's enough.
 

@@ -2,7 +2,6 @@
 
 **Full title:** Guide to working with the repository and git without the terminal
 **Part of:** Shubin Framework (companion document)
-**Version:** 3.0
 
 **Who it's for:** PM, designer, marketer, founder, domain expert — any team member who has to work with the team's markdown repository but has never opened a terminal.
 

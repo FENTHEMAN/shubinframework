@@ -2,7 +2,6 @@
 
 **Full title:** Context-First Framework for small teams with AI
 **Author:** Fen
-**Version:** 5.0
 **Date:** 2026-05-02
 
 **Who it's for:** teams of 2–8 building a product from MVP to early traction, using AI agents (Claude Code, Cowork) as regular team members.

@@ -2,7 +2,6 @@
 
 **Full title:** Minimum on Finance, Legal, Security, Data and Support for a team of 2–8
 **Part of:** Shubin Framework (companion document)
-**Version:** 2.0
 
 **Who it's for:** tech lead or founder of a 2–8 team pre-PMF and pre-stable-traction. The document answers: "what's the minimum I need to do in these areas to avoid catastrophe, and what can be deferred".
 

@@ -2,7 +2,6 @@
 
 **Full title:** Repository for small projects — lite version
 **Part of:** Shubin Framework (starter document)
-**Version:** 3.0
 
 **Who it's for:** 1–2 people working on an MVP or pet project with Claude Code. Speed matters more than process. No plans to hire yet.
 
