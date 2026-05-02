@@ -2,9 +2,9 @@
 
 All notable changes to Shubin Framework are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [2.0.0] — 2026-05-03
 
-Major rewrite. Breaking — no migration path provided (no users on v1). The version becomes `2.0.0` once tagged in the release stage.
+Major rewrite. Breaking — no migration path provided (no users on v1).
 
 ### Added
 - `ARCHITECTURE.md` — matklad-style code map for the repository.
@@ -61,6 +61,15 @@ Major rewrite. Breaking — no migration path provided (no users on v1). The ver
 - UPPER_CASE in root = canonical document (rarely changes).
 - lowercase in root = framework spec for a specific audience.
 - flat dirs at root = collections by document type.
+
+### Three-layer model
+- **Markdown vault** holds durable knowledge: ADRs, patterns, architecture, glossary, journal, optional knowledge wiki.
+- **GitHub Issues + Milestones + Projects v2** holds the live workflow: features, tracking, sprint cadence, cross-repo planning.
+- **AI auto-ingest** bridges the two via `knowledge/wiki/`, compiled from `knowledge/raw/`, closed Issues, merged PRs, new ADRs, journal entries, and Project items per `knowledge/AGENTS.md`.
+
+### Internationalization
+- `i18n/ru/` resynced in full to the v2 layout. Status per file is tracked in `i18n/ru/SYNC_STATUS.md`. Some prose remains pending review against the v2 English text and is tracked via post-release Issues.
+- `i18n/en/` removed — the repository root is the canonical English source, and a duplicated `i18n/en/` only produced drift.
 
 ### Migration
 None. v1 had no users; v2 is the new baseline.
