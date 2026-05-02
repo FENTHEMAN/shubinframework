@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discussion
+    url: https://github.com/your-org/your-repo/discussions
+    about: Для вопросов и идей до того, как они станут Issues
