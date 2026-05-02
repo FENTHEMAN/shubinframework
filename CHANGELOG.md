@@ -24,6 +24,7 @@ Major rewrite. Breaking — no migration path provided (no users on v1).
 - `framework.md` slimmed from 1133 → 692 lines. Design Process / Infrastructure / Testing / Rituals chapters condensed; the long onboarding running example moved to `guides/feature-cycle-example.md`.
 - **Feature pages are now stateless specifications.** Status, ownership, priority, dates, and progress live in GitHub Issues + Milestones + linked PRs. Markdown carries knowledge; GitHub carries state.
 - `README.md` rewritten and absorbed `intro.md`'s navigation function.
+- `i18n/ru/` resynced in full to v2 (framework, lite, knowledge, non-tech, non-engineering, plus `guides/feature-cycle-example.md`).
 
 ### Removed
 - `intro.md` (merged into `README.md`).
@@ -31,6 +32,7 @@ Major rewrite. Breaking — no migration path provided (no users on v1).
 - `COMMON.md` (replaced by `AGENTS.md`).
 - Stateful frontmatter on feature pages (`status` / `owner` / `priority` / `created` / `target` and the `## Log` section). All of this state now lives in GitHub Issues.
 - `index.md` (the README is the index).
+- `i18n/en/` (the repository root is now the English source; duplicating it under `i18n/en/` only created drift).
 
 ### Naming conventions
 - UPPER_CASE in root = canonical document (rarely changes).
