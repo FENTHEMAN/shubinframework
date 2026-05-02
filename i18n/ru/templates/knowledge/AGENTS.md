@@ -15,12 +15,15 @@
 3. **`journal/`** — все записи (`feedback/`, `incidents/`, `retros/`). Тот же метод детекции.
 4. **GitHub Issues и PRs** в связанных кодовых репозиториях — закрытые Issues и смерженные PR с прошлого запуска. Используется `gh` CLI или GitHub API. Список связанных кодовых репо лежит в `knowledge/wiki/_meta.md`.
 5. **`patterns/`** — для cross-references. Когда wiki-страница обсуждает паттерн, ссылается на файл паттерна, а не пересказывает его.
+6. **GitHub Project items**, если Project связан (id и field schema в `_meta.md`). Поле `Affected parts` Project'а — первичный сигнал классификации; см. секцию «Project integration» ниже.
 
 ## Outputs (что производить)
 
 Wiki организована по **продуктовому домену**, не по типу источника и не хронологически.
 
-У каждого домена одна страница: `knowledge/wiki/<domain>.md`. Границы доменов выводятся из лейблов Issues, заголовков ADR и кластеров feedback. Примеры: `auth.md`, `billing.md`, `onboarding.md`, `notifications.md`.
+У каждого домена одна страница: `knowledge/wiki/<domain>.md`. Границы доменов выводятся из поля `Affected parts` Project'а, если он есть; иначе — из лейблов Issues, заголовков ADR и кластеров feedback. Примеры: `auth.md`, `billing.md`, `onboarding.md`, `notifications.md`.
+
+**Опциональная вторая ориентация: discovery-страницы.** Если команда ещё ведёт discovery-работу (интервью, конкурент-анализ, индустри-research), вторичные страницы живут в `knowledge/wiki/personas/`, `knowledge/wiki/competitors/` и т.п. по формату из `knowledge.md` главы 3. Они разделяют тот же compile-механизм, но источники для них в основном из `raw/`, не из Issues. Обе ориентации могут сосуществовать.
 
 Агент **не** создаёт:
 
@@ -101,6 +104,29 @@ Wiki организована по **продуктовому домену**, н
 - Список связанных кодовых репозиториев (для ingest Issues/PR).
 - Список доменов и их соответствующих wiki-страниц.
 - Известные проблемы с wiki (пробелы, конфликты), помеченные для follow-up человеком.
+
+## Project integration
+
+Когда GitHub Project связан (id и field schema в `_meta.md`), агент использует custom fields Project'а как первичные сигналы классификации — переопределяя эвристики по лейблам и заголовкам:
+
+- **Affected parts** (multi-select) — самый сильный сигнал. Issue с `Affected parts: [auth, billing]` обновляет и `auth.md`, и `billing.md`.
+- **Type** (single-select) — разделяет Feature, Bug, Tech debt, Spike, Doc. Формат страницы выше может расти подсекциями per-Type, когда это полезно.
+- **Status** — только items в `Done` вплетаются в нарратив wiki; closed-as-`wontfix` пропускаются.
+- **Iteration** — используется, когда агента спрашивают «что приземлилось в итерации N» или «начиная с итерации N».
+
+Чтение Project через `gh`:
+
+```
+gh project item-list <number> --owner <org> --format json --limit 200 \
+  --jq '.items[] | {title: .content.title, status: .Status,
+                    parts: .["Affected parts"], type: .Type}'
+```
+
+Для крупных Project — пагинация или GraphQL напрямую.
+
+Агент **не** модифицирует структуру Project — поля, views, workflows — это человеческие решения. Агент может добавлять закрытые Issues из связанных репо в Project, если auto-add workflow их пропустил, и обновлять значения per-item полей по явному запросу. Всё прочее требует действий человека.
+
+Без связанного Project агент откатывается на: лейблы Issues, пути файлов в линкованных PR, теги journal-записей, ключевые слова заголовков ADR. Назначение домена в этом fallback-режиме промахивается ~10–20% items. Полная история интеграции — в `knowledge.md` главе 12, schema полей Project — в `projects.md`.
 
 ## Human override
 

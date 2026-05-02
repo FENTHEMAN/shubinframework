@@ -31,6 +31,9 @@ On each compile run, the agent reads:
    `knowledge/wiki/_meta.md`.
 5. **`patterns/`** — for cross-references. When a wiki page discusses a
    pattern, link to the pattern file rather than restating it.
+6. **GitHub Project items** if a Project is linked (Project id and field
+   schema in `_meta.md`). The Project's `Affected parts` field is the
+   primary classification signal — see "Project integration" below.
 
 ## Outputs (what to produce)
 
@@ -38,8 +41,16 @@ The wiki is organised by **product domain**, not by source type and not
 chronologically.
 
 Each domain has one page: `knowledge/wiki/<domain>.md`. Domain boundaries
-are inferred from Issue labels, ADR titles, and feedback clusters.
+are inferred from the Project's `Affected parts` field if available,
+otherwise from Issue labels, ADR titles, and feedback clusters.
 Examples: `auth.md`, `billing.md`, `onboarding.md`, `notifications.md`.
+
+**Optional second orientation: discovery pages.** When the team also runs
+discovery work (interviews, competitor analysis, industry research),
+secondary pages live in `knowledge/wiki/personas/`,
+`knowledge/wiki/competitors/`, etc., following the format described in
+`knowledge.md` chapter 3. They share the same compile mechanism but the
+sources are mostly `raw/`, not Issues. Both orientations may coexist.
 
 The agent does **not** create:
 
@@ -131,6 +142,44 @@ A human reviews and merges. The agent does not push to `main` directly.
 - List of domains and their corresponding wiki pages.
 - Known issues with the wiki (gaps, conflicts) flagged for human
   follow-up.
+
+## Project integration
+
+When a GitHub Project is linked (id and field schema in `_meta.md`), the
+agent uses the Project's custom fields as primary classification signals
+— overriding label and title heuristics:
+
+- **Affected parts** (multi-select) — the strongest signal. An Issue
+  with `Affected parts: [auth, billing]` updates both `auth.md` and
+  `billing.md`.
+- **Type** (single-select) — separates Feature, Bug, Tech debt, Spike,
+  Doc. The page format above can grow per-Type subsections when useful.
+- **Status** — only items in `Done` are folded into the wiki narrative;
+  closed-as-`wontfix` items are skipped.
+- **Iteration** — used when the agent is asked for "what landed in
+  iteration N" or "since iteration N".
+
+Reading the Project via `gh`:
+
+```
+gh project item-list <number> --owner <org> --format json --limit 200 \
+  --jq '.items[] | {title: .content.title, status: .Status,
+                    parts: .["Affected parts"], type: .Type}'
+```
+
+For larger Projects, paginate or use GraphQL directly.
+
+The agent **does not** modify the Project's structure — fields, views,
+workflows are human decisions. The agent may add closed Issues from
+linked repos to the Project if the auto-add workflow is missing them,
+and may update per-item field values when explicitly asked. Anything
+beyond that requires a human action.
+
+Without a linked Project, the agent falls back to: Issue labels, linked
+PR file paths, journal entry tags, ADR title keywords. Domain assignment
+misses ~10–20% of items in this fallback mode. See `knowledge.md`
+chapter 12 for the full integration story and `projects.md` for the
+Project field schema.
 
 ## Human override
 
