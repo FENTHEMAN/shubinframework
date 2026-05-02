@@ -27,11 +27,11 @@ Major rewrite. Breaking — no migration path provided (no users on v1).
 - `vault/knowledge/` → `knowledge/`.
 - `vault/COMMON.md` → `AGENTS.md` — adopting the AGENTS.md cross-tool standard.
 - `vault/knowledge/CLAUDE.md` → `knowledge/AGENTS.md` for adopting teams; the canonical example shipped with the framework lives at `templates/knowledge/AGENTS.md`.
-- `framework.md` slimmed from 1133 lines to roughly 700. Design Process / Infrastructure / Testing / Rituals chapters condensed; the long onboarding running example moved to `guides/feature-cycle-example.md`.
+- `framework.md` slimmed from 1133 lines to 711. Design Process / Infrastructure / Testing / Rituals chapters condensed; the long onboarding running example moved to `guides/feature-cycle-example.md` and rewritten around the Issue-first cycle.
 - **Features live in GitHub Issues, not in markdown.** No `features/` directory. The Issue body — structured by an Issue Template (Why / Scope / Success criteria / Decisions / Design) — is the spec, the tracker, and the conversation. ADRs, patterns, journal stay in markdown; everything about *workflow* (status, ownership, priority, milestones, comments, linked PRs) lives in the Issue. The closed Issue is the historical record of the feature.
 - Feature iteration cycle compressed from eight steps to six: Idea→Issue, Discussion (optional), ADR (if needed), Implementation, Merge, Retrospective signal (if needed).
 - `README.md` rewritten and absorbed `intro.md`'s navigation function.
-- `i18n/ru/` resynced in full to v2 (framework, lite, knowledge, non-tech, non-engineering, plus `guides/feature-cycle-example.md`). `i18n/ru/framework.md` will be retranslated against the GitHub-Issue cycle as a follow-up before v2.0.0 ships.
+- `i18n/ru/` resynced in full to v2 (framework, lite, knowledge, non-tech, non-engineering, plus `guides/feature-cycle-example.md`). `i18n/ru/framework.md` and `i18n/ru/guides/feature-cycle-example.md` retranslated against the Issue-first feature cycle.
 
 ### Removed
 - `intro.md` (merged into `README.md`).
