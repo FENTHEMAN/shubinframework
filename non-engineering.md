@@ -195,7 +195,7 @@ The most important thing from support is **the link to the product**. Support se
 Workflow:
 1. Support agent receives a ticket.
 2. If it's a signal (not one-off), creates an entry in `journal/feedback/YYYY-MM-DD-<theme>.md` with description and link to the ticket.
-3. Once a week the PM scans these files and turns patterns into hypotheses in `features/` (tracked as GitHub Issues) or in the wiki (if the knowledge module is in use).
+3. Once a week the PM scans these files and turns patterns into hypotheses — opened as GitHub Issues — or into wiki entries (if the knowledge module is in use).
 
 Without this loop, you build features blind.
 
