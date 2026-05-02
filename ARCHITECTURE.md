@@ -18,6 +18,7 @@ The repository is in the middle of a v1 → v2 migration. Where the current layo
 README.md              English entry point and elevator pitch
 README.ru.md           Russian entry point (mirror of README)
 ARCHITECTURE.md        this file — map of the repo for contributors
+AGENTS.md              instructions for AI agents working on this repo
 CONTRIBUTING.md        how to propose changes
 CHANGELOG.md           release history
 LICENSE                MIT
@@ -31,12 +32,15 @@ non-engineering.md     Finance / Legal / Security / Data / Support minimum
 conventions/           cross-cutting conventions for contributors
   GIT_CONVENTION.md    commit and branch rules
 
+templates/             files an adopting team copies into their repos
+  .github/             GitHub-specific (Issue Templates)
+  knowledge/           AGENTS.md for the optional knowledge module
+
 i18n/                  translations of the lower-case spec documents
-  en/                  English mirrors (currently duplicates the root)
   ru/                  Russian translations
 ```
 
-The lower-case files at the root are the framework itself — the documents an adopting team reads. The UPPER_CASE files are meta-documents about this repository. `CONTRIBUTING.md` and `CHANGELOG.md` were added in stage 4 of the v2 migration. The remaining canonical UPPER_CASE files anticipated by v2 — `STACK.md`, `GLOSSARY.md`, `AGENTS.md` — are still absent and will land in a later stage; this section is updated as they do.
+The lower-case files at the root are the framework itself — the documents an adopting team reads. The UPPER_CASE files are meta-documents about this repository. `CONTRIBUTING.md`, `CHANGELOG.md`, and `AGENTS.md` were added during the v2 migration; the `templates/` directory landed alongside `AGENTS.md`. The remaining canonical UPPER_CASE files anticipated by v2 — `STACK.md`, `GLOSSARY.md` — are still absent and will land in a later stage; this section is updated as they do.
 
 ### `README.md`, `README.ru.md`
 
@@ -53,6 +57,10 @@ The contributor entry point: how to propose a change (issue first for anything b
 ### `CHANGELOG.md`
 
 Release history in [Keep a Changelog](https://keepachangelog.com/) format. The `[Unreleased]` block accumulates v2 work in progress; the v2.0.0 entry is filled in at release. Until then, the per-stage `v2:` commits on the `v2` branch are the authoritative log of what changed.
+
+### `AGENTS.md`
+
+Rules for AI agents working *on this repository*, not for AI agents in adopting teams' repos. The framework prescribes that adopting teams put their own `AGENTS.md` at the root of their markdown repo, with rules tuned to *their* product. This file is the version for editing the framework itself: it tells Claude Code, Codex, Cursor, and similar tools which documents to read first, the invariants to honour, the ADR format to follow, and the prose style to match. If you are an AI agent reading this file in order, read `AGENTS.md` next.
 
 ### `LICENSE`
 
@@ -82,9 +90,13 @@ The minimum a founder needs for Finance, Legal, Security, Data, and Support. Eac
 
 Cross-cutting conventions for contributors to this repo. Today this is just `conventions/GIT_CONVENTION.md`, which prescribes commit message format and branch naming — including the v2-specific rule that all migration commits go on the `v2` branch with a `v2:` prefix and atomic scope. As more cross-cutting rules accrete (style guide for prose, review etiquette, release process), they belong here too rather than as new top-level files; the root is reserved for canon and for framework specs.
 
+### `templates/`
+
+Files an adopting team copies into their own repositories. The framework is documentation, not a CLI: when it prescribes a concrete file — a GitHub Issue Template, an `AGENTS.md` for a specific subdirectory — the canonical version of that file lives here and a team copies it into the right place in their repo. Current contents: `templates/.github/ISSUE_TEMPLATE/` (Feature, Bug, plus `config.yml` and a copy guide) and `templates/knowledge/AGENTS.md` (the auto-ingest spec for the optional knowledge module). Templates are intentionally not auto-installed; see `templates/README.md`.
+
 ### `i18n/`
 
-Translations of the lower-case spec documents. `i18n/ru/` carries the Russian translations and is the active translation directory; an editor changing a root spec is expected to either update `i18n/ru/` in the same PR or open a follow-up issue noting the drift. `i18n/en/` exists for symmetry but currently duplicates the root verbatim — a transitional artifact of the v1 layout, likely to be removed in a later v2 stage. The canonical English text is always the root copy, never `i18n/en/`.
+Translations of the lower-case spec documents. `i18n/ru/` carries the Russian translations and is the active translation directory; an editor changing a root spec is expected to either update `i18n/ru/` in the same PR or open a follow-up issue noting the drift. The canonical English text is always the root copy. There is no `i18n/en/` — the root *is* the English source, and an earlier mirror under `i18n/en/` was removed once it had nothing to add but drift.
 
 ## Document hierarchy
 
@@ -92,7 +104,7 @@ Files in this repo fall into four layers, distinguished by their place and case.
 
 ### UPPER_CASE in root = canon
 
-Documents whose names a contributor or AI agent should learn first: `README.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`. Future canon files still pending are `STACK.md`, `GLOSSARY.md`, and `AGENTS.md`. They change rarely and describe what this repository *is* rather than what the framework prescribes. The shouty-case is deliberate: a contributor scanning the root should be able to spot the meta-documents without reading filenames carefully.
+Documents whose names a contributor or AI agent should learn first: `README.md`, `ARCHITECTURE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`. Future canon files still pending are `STACK.md` and `GLOSSARY.md`. They change rarely and describe what this repository *is* rather than what the framework prescribes. The shouty-case is deliberate: a contributor scanning the root should be able to spot the meta-documents without reading filenames carefully.
 
 ### lower-case in root = framework specs
 
@@ -108,7 +120,7 @@ Mirrors of the lower-case specs in another language. The root-level `README.<lan
 
 ### What the framework itself prescribes (not present here)
 
-The framework — described in `framework.md` and `lite.md` — prescribes additional directories that adopting teams create in *their* repos: `decisions/` for ADRs, `patterns/` for engineering patterns, `journal/{feedback,incidents,retros}/` for the append-only chronicle, `knowledge/{raw,wiki}/` with `knowledge/AGENTS.md` for the Karpathy module, and `guides/` for long-form examples. None of those exist in this repo, and none will: per project policy we do not apply the framework to its own meta-work.
+The framework — described in `framework.md` and `lite.md` — prescribes additional directories that adopting teams create in *their* repos: `decisions/` for ADRs, `patterns/` for engineering patterns, `journal/{feedback,incidents,retros}/` for the append-only chronicle, `knowledge/{raw,wiki}/` with `knowledge/AGENTS.md` for the Karpathy module, and `guides/` for long-form examples. None of those exist in this repo, and none will: per project policy we do not apply the framework to its own meta-work. Where the framework prescribes a copy-target file (the `knowledge/AGENTS.md` spec, GitHub Issue Templates), the canonical version lives in `templates/` rather than at the prescribed path.
 
 Notably absent from that list — and absent in adopting teams' repos too — is a `features/` directory. In v2 features live in GitHub Issues, not in markdown. The Issue is the spec, the tracker, and the conversation; structure for P0/P1 features is enforced by an Issue Template rather than by a markdown skeleton.
 
@@ -119,7 +131,7 @@ The reason for the not-applying-to-itself rule is that the framework is a moving
 Many of these are stated as the *absence* of something rather than the presence — matklad's observation that invariants are often best expressed negatively. The list below is what a contributor must keep true when editing this repo.
 
 - No `vault/` directory. v2 deliberately flattened. Earlier drafts wrapped every working directory in `vault/`; the v2 migration lifts them to root because GitHub and the filesystem already provide the wrapper, and a redundant prefix on every path adds noise without information.
-- No `COMMON.md`. AI-agent instructions live in `AGENTS.md` (root) and `knowledge/AGENTS.md` (Karpathy module). `AGENTS.md` is the cross-tool standard adopted by Claude Code, Cowork, and others; we follow it rather than invent our own filename.
+- No `COMMON.md`. AI-agent instructions live in `AGENTS.md` at the root, and — for adopting teams using the Karpathy module — at `knowledge/AGENTS.md`. `AGENTS.md` is the cross-tool standard adopted by Claude Code, Cowork, and others; we follow it rather than invent our own filename. The canonical `knowledge/AGENTS.md` for adopting teams to copy lives in this repo at `templates/knowledge/AGENTS.md`.
 - No nested subfolders under `decisions/`. ADRs are flat and sequentially numbered (`0001-...md`, `0002-...md`, ...). Numbering never resets, even after major rewrites of the framework or of an adopting team's repository. The flat numbering is the index; categorisation happens through tags inside the document, not through directories.
 - **No `features/` directory** — not in this repo, not in adopting teams' repos. Features are GitHub Issues, not markdown documents. A markdown feature page that mirrored issue state would diverge from the issue within days; one without state would duplicate the issue's body. The v2 design closes the dilemma by removing the markdown layer entirely. Markdown holds knowledge (ADRs, patterns, retros, wiki); GitHub holds workflow (features, milestones, status, owner, priority).
 - No emoji in canonical (UPPER_CASE) documents. Lower-case spec documents may contain emoji only where a quoted external source has them.
@@ -130,22 +142,25 @@ Many of these are stated as the *absence* of something rather than the presence 
 - The framework is not applied to its own repository. No `decisions/0001-v2-restructure.md`, no ADRs or feature artefacts for v2 work itself. Meta-work for the framework is tracked in commit messages and PR descriptions. This is a deliberate choice during the v2 migration; it may be revisited in a later version.
 - During the v2 migration, no commits go directly to `main`. All work lands on the `v2` branch with the `v2:` commit prefix and is merged in one piece when v2.0.0 is ready. This invariant disappears once v2 ships.
 - No translation lives outside `i18n/<lang>/`, except the language-specific READMEs at the root. A new translation language adds an `i18n/<lang>/` directory and a root-level `README.<lang>.md`; it never adds a sibling tree at the root.
+- Files under `templates/` are *copy-targets for adopting teams*, not active configuration for this repo. A change to a template does not affect any behaviour in this repository; it only affects what teams who newly adopt the framework end up with. There is intentionally no script that materialises templates into the prescribed paths.
 
 ## Where to find things
 
-| Looking for                                  | Read                                |
-|----------------------------------------------|-------------------------------------|
-| What this is, who it's for                   | `README.md`                         |
-| How the repo is organized (this file)        | `ARCHITECTURE.md`                   |
-| The framework, full version                  | `framework.md`                      |
-| The framework, solo or pair version          | `lite.md`                           |
-| Karpathy LLM-wiki module                     | `knowledge.md`                      |
-| Vault without the terminal                   | `non-tech.md`                       |
-| Finance / Legal / Security / Data / Support  | `non-engineering.md`                |
-| Git commit and branch rules                  | `conventions/GIT_CONVENTION.md`     |
-| Russian versions                             | `README.ru.md`, `i18n/ru/`          |
+| Looking for                                  | Read                                       |
+|----------------------------------------------|--------------------------------------------|
+| What this is, who it's for                   | `README.md`                                |
+| How the repo is organised (this file)        | `ARCHITECTURE.md`                          |
+| Rules for AI agents editing this repo        | `AGENTS.md`                                |
+| The framework, full version                  | `framework.md`                             |
+| The framework, solo or pair version          | `lite.md`                                  |
+| Karpathy LLM-wiki module                     | `knowledge.md`                             |
+| Markdown repository without the terminal     | `non-tech.md`                              |
+| Finance / Legal / Security / Data / Support  | `non-engineering.md`                       |
+| Files an adopting team copies                | `templates/`                               |
+| Git commit and branch rules                  | `conventions/GIT_CONVENTION.md`            |
+| Russian versions                             | `README.ru.md`, `i18n/ru/`                 |
 
-The framework itself prescribes where adopting teams put their own artefacts (`decisions/`, `patterns/`, `journal/`, `knowledge/`, `guides/`) and routes features to GitHub Issues rather than to a directory; see `framework.md` for that map. None of those directories exist in this repo, and a contributor working *on* the framework should not create them here.
+The framework itself prescribes where adopting teams put their own artefacts (`decisions/`, `patterns/`, `journal/`, `knowledge/`, `guides/`) and routes features to GitHub Issues rather than to a directory; see `framework.md` for that map. None of those directories exist in this repo, and a contributor working *on* the framework should not create them here. Where the framework prescribes a copy-target file, the canonical version lives in `templates/`.
 
 A reader new to the framework should start with `README.md`, then either `framework.md` (for the full mental model) or `lite.md` (for the smaller version). A reader new to *this repo* — for example, an AI agent assisting with editing — should read this file plus `conventions/GIT_CONVENTION.md` before making any commits.
 
