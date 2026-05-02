@@ -51,11 +51,10 @@ For personal knowledge management, thousands of people are already using it. For
 
 Shubin Framework has other layers:
 - `decisions/` — ADRs (our decisions). Humans write.
-- `features/` — feature specs. Humans write.
 - `patterns/` — code patterns. Humans write.
 - `journal/feedback/` — raw append-only feedback. Humans write.
 
-These are **human-maintained** layers. The LLM reads them, doesn't modify them.
+These are **human-maintained** layers. The LLM reads them, doesn't modify them. Features are not on this list because in v2 they live in GitHub Issues, not in the markdown vault — see `framework.md` chapter 4.1.
 
 The knowledge module is **the only layer where the LLM is the maintainer**. Humans drop sources, the LLM compiles. That's the fundamental difference.
 
@@ -68,7 +67,6 @@ The knowledge module is **the only layer where the LLM is the maintainer**. Huma
 ```
 your-product/
 ├── decisions/
-├── features/
 ├── patterns/
 ├── journal/
 └── knowledge/                    ← this module
@@ -153,7 +151,7 @@ This helps the LLM understand context during compilation. Works without frontmat
 
 **Don't put in:**
 - Your internal ADRs (those are in `decisions/`)
-- Feature specs (those are in `features/`)
+- Feature specs (those are GitHub Issues in your code repo, not markdown)
 - Team operational documents (statuses, schedules)
 - Third-party materials without PII scrubbing (client names, phone numbers, financial data)
 - NDA-protected materials that can't be distributed inside the team
