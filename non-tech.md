@@ -20,7 +20,7 @@ You make changes to that repository — add a glossary term, log an interview, d
 
 **Related documents:**
 - `framework.md` — full framework for the team's tech lead. Optional reading.
-- `knowledge.md` — LLM wiki module. If your team adopted it — you'll need section 9 here.
+- `knowledge.md` — LLM wiki module. If your team adopted it — you'll need section 10 here.
 
 ---
 
@@ -196,7 +196,23 @@ The repository in this document is for **durable knowledge**: ADRs, glossary, ar
 
 ---
 
-## 7. What you can and can't do in the repo
+## 7. Projects v2 in the web UI
+
+If your team uses GitHub Projects v2, most of what you do happens in the browser, no terminal needed.
+
+You bookmark the Project (linked from any of the team's repos under the Projects tab, or directly from the org) and open it like a kanban board. Switch between views via the tabs at the top — usually "Current sprint" for the day-to-day, "Backlog" for upcoming work, and "Roadmap" when you need a quarterly conversation. Filter the board to your team or iteration if it's busy.
+
+What you do directly: drag an Issue between columns to update its Status (Backlog → Ready → In Progress → In Review → Done), edit per-Issue custom fields (Affected parts, Type, Priority) by right-clicking on the row or from the Issue page itself. Cross-cutting features deserve special mention: when a main Issue lives in the docs repo and sub-issues live across code repos, the **hierarchy view** (View → Show hierarchy) shows the parent with all sub-issues nested under it, regardless of repo. That is the view that justifies having a Project in the first place.
+
+What you don't change without asking: the field structure (adding or renaming fields, changing column lists), the views (creating, deleting, or reorganising shared ones — save filters as a personal view if you want a private slice), and any automations the Project may have (auto-add Issues from certain repos, auto-move on close). Those are tech-lead-level decisions because they affect everyone.
+
+Cross-cutting features in practice: when you scope a feature touching frontend + backend + design, you open the **main Issue in the docs repo** using the Cross-cutting template and fill in Why / Scope / Affected parts. Engineers (or the tech lead) open the per-part sub-issues afterward; you don't have to. The Project picks them all up once auto-add runs.
+
+For the full Project setup — custom fields, views, automations, AI-agent integration — see `projects.md`. As a non-technical contributor you don't need to read it cover-to-cover, only the sections relevant when you're actually working with the board.
+
+---
+
+## 8. What you can and can't do in the repo
 
 This section is about the repository on your computer. For features, see section 6 — they don't live here.
 
@@ -216,13 +232,13 @@ This section is about the repository on your computer. For features, see section
 - Files with extensions `.gitignore`, `.gitattributes` — those are plumbing
 - The `.git/` folder (it's hidden anyway, but just in case)
 
-### 6.1. If the team uses the knowledge module
+### 8.1. If the team uses the knowledge module
 
-If your team adopted the knowledge module (the `knowledge/` folder in the repository), it has separate rules. See section 9 of this document.
+If your team adopted the knowledge module (the `knowledge/` folder in the repository), it has separate rules. See section 10 of this document.
 
 ---
 
-## 8. Alternative: editing via GitHub web
+## 9. Alternative: editing via GitHub web
 
 If GitHub Desktop feels scary, there's a simpler path: editing directly on github.com.
 
@@ -240,7 +256,7 @@ Downsides:
 
 But for one-off edits like adding a glossary term or fixing a typo it works great. Especially from mobile. (For features, you don't need this at all — see section 6.)
 
-### 8.1. When the repository is on your phone
+### 9.1. When the repository is on your phone
 
 Sometimes you need to note a thought or feedback when there's no computer.
 
@@ -253,7 +269,7 @@ Don't turn the repository into a phone task list. Serious work happens at a comp
 
 ---
 
-## 9. How to work with the knowledge module
+## 10. How to work with the knowledge module
 
 *This section is only relevant if your team adopted the knowledge module (the `knowledge/` folder in the repository). If not, you can skip it.*
 
@@ -264,7 +280,7 @@ The knowledge module is where the team accumulates **external knowledge**: user 
 - You'll be able to ask questions like "what do we know about enterprise users?" and get a synthesis from all accumulated sources
 - But there are strict rules you can't break, or the whole system falls apart
 
-### 9.1. How to put sources into raw/
+### 10.1. How to put sources into raw/
 
 You work in the `knowledge/raw/` subfolder. Structure:
 
@@ -297,7 +313,7 @@ Commit with message `raw: <what it is>` — e.g., `raw: Acme Corp discovery inte
 
 Some time later, a developer (or you via Cowork) will run an ingest session, and Claude will add this material to wiki/.
 
-### 9.2. Two iron rules
+### 10.2. Two iron rules
 
 **Rule 1: `knowledge/raw/` — immutable.** Once you've put a file there, **you don't edit its contents**. Found an error? Add a new file with the correction (`2026-04-18-acme-corp-discovery-correction.md`). Don't touch the old one.
 
@@ -309,7 +325,7 @@ This matters because Claude remembers what it compiled from which source. If you
 
 Editing the wiki directly — Claude will overwrite your edits next time, and you'll fight the system.
 
-### 9.3. How to ask questions of the wiki
+### 10.3. How to ask questions of the wiki
 
 Through Cowork or Claude Code (ask a developer to show you how to connect Cowork to your repository — it's 5 minutes of setup).
 
@@ -320,7 +336,7 @@ Examples of questions that work:
 
 Claude goes into `wiki/`, returns an answer with links to raw sources. If a wiki page doesn't exist yet but raw has relevant stuff — Claude usually offers to create the page.
 
-### 9.4. What to do when Claude makes something up
+### 10.4. What to do when Claude makes something up
 
 LLMs sometimes hallucinate — attribute a quote to the wrong interview, make generalizations that aren't in the sources.
 
@@ -331,7 +347,7 @@ If you're reading a wiki page and see a suspicious claim:
 
 Claude will fix it. This is a normal cycle — don't panic.
 
-### 9.5. Minimal ritual
+### 10.5. Minimal ritual
 
 Once a week (or more often if lots of new material) — an ingest session. Usually run by a developer or tech lead. For you, it's enough to:
 - Put new raw/ files in during the week
@@ -342,7 +358,7 @@ Full documentation for the knowledge module is in `knowledge.md`. For you as a r
 
 ---
 
-## 10. Anti-patterns for non-technical users
+## 11. Anti-patterns for non-technical users
 
 **1. "I keep forgetting to pull, nothing works."**
 Make it a habit: opened GitHub Desktop → first action is to look at "Pull origin".
@@ -360,11 +376,11 @@ In git it's practically impossible to break something irreversibly. Any action c
 Better to save half your work than lose it in a crash. Intermediate commits are normal.
 
 **6. "I edit wiki/ directly because there's an error there" (if using the knowledge module).**
-See section 9.2. Never edit `knowledge/wiki/` directly — fix via sources or by asking Claude.
+See section 10.2. Never edit `knowledge/wiki/` directly — fix via sources or by asking Claude.
 
 ---
 
-## 11. Realistic expectations
+## 12. Realistic expectations
 
 **First week:** you'll ask a developer 2–3 times a day. That's normal.
 
