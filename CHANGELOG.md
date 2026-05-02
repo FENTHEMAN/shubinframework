@@ -32,6 +32,7 @@ Major rewrite. Breaking — no migration path provided (no users on v1).
 - Feature iteration cycle compressed from eight steps to six: Idea→Issue, Discussion (optional), ADR (if needed), Implementation, Merge, Retrospective signal (if needed).
 - `README.md` rewritten and absorbed `intro.md`'s navigation function.
 - `i18n/ru/` resynced in full to v2 (framework, lite, knowledge, non-tech, non-engineering, plus `guides/feature-cycle-example.md`). `i18n/ru/framework.md` and `i18n/ru/guides/feature-cycle-example.md` retranslated against the Issue-first feature cycle.
+- `i18n/ru/templates/` added — Russian mirror of `templates/` (Issue Templates and `knowledge/AGENTS.md`) for Russian-speaking teams to copy from.
 
 ### Removed
 - `intro.md` (merged into `README.md`).
@@ -40,6 +41,7 @@ Major rewrite. Breaking — no migration path provided (no users on v1).
 - `features/` directory — including the v2-interim "stateless spec page" model. Features now live entirely as GitHub Issues; the Issue Template carries the structure that the markdown spec used to carry.
 - `index.md` (the README is the index).
 - `i18n/en/` (the repository root is now the English source; duplicating it under `i18n/en/` only created drift).
+- Per-document `**Version:**` field. The framework version lives in the git tag and this CHANGELOG; per-file Version lines drifted and were redundant with both.
 
 ### Naming conventions
 - UPPER_CASE in root = canonical document (rarely changes).
