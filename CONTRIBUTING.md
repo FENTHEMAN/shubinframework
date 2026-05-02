@@ -19,7 +19,7 @@ For typo fixes and obviously broken links, skip the issue and open the PR direct
 
 ## What needs discussion before a PR
 
-- **New top-level directories.** The repository layout (`decisions/`, `features/`, `patterns/`, `journal/`, `knowledge/`) is a convention adopted by every team using the framework. Adding to it changes their conventions too.
+- **New top-level directories.** The repository layout (`decisions/`, `patterns/`, `journal/`, `knowledge/`) is a convention adopted by every team using the framework. Adding to it changes their conventions too. A returning `features/` directory belongs in this category and will not land without an ADR-level discussion in v3.
 - **New canonical UPPER_CASE files at root.** Same reason.
 - **Renaming an existing chapter or document.** Inbound links across the docs and from external readers break silently.
 - **Material expansions of the principles section.** The framework rests on two principles; if a third is being proposed, the bar is high.
