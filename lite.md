@@ -302,6 +302,10 @@ No Cowork scripts generating weekly digests. You don't have a weekly — you hav
 
 Exception: knowledge ingest, but it's in dialogue mode, not background.
 
+### Don't set up GitHub Projects v2
+
+GitHub Projects v2 is the planning surface the full framework recommends for teams running cross-cutting features routinely or growing past five people. For a solo or 1–2 person setup, it is **unnecessary overhead** — your repo's open Issues list (or `todo.md`) is enough. Adding a Project at this scale means custom fields nobody filters by and a board nobody opens. Skip it. When the team grows, `projects.md` covers the setup.
+
 ### Don't copy the structure of large teams
 
 Saw in some blog post: `domain/`, `product/`, `engineering/`, `design/`? Ignore it. That's for teams of 5+. For you it's a graveyard of empty folders.
@@ -310,13 +314,15 @@ Saw in some blog post: `domain/`, `product/`, `engineering/`, `design/`? Ignore 
 
 ## When to switch to the full version
 
-One of three signals:
+Any one of these signals is enough:
 
-1. **You hire a third person.** Verbal explanations stop working, you need readable context.
-2. **The project is in production and you have users.** Incidents, feedback, metrics appear — doesn't fit in four files.
-3. **`decisions.md` or `patterns.md` grew past 300 lines.** Time to split by theme.
+1. **You hire a third person.** Verbal explanations stop working; you need readable context for everyone.
+2. **A second product part appears.** Adding a separate frontend SPA on top of a serverless API, splitting the backend into two services, bringing in a mobile app. With more than one part, cross-cutting features become routine — that's when GitHub Issues, sub-issues, and a Project start paying off (`framework.md` chapters 4.2–4.3, plus `projects.md` for the Project setup).
+3. **First enterprise customer.** Compliance, SLAs, structured incident response, real privacy posture — none of this fits in three markdown files. `non-engineering.md` becomes relevant.
+4. **Knowledge stops fitting in one head.** You catch yourself looking up old decisions in your own `notes/` to remember what you chose. That's the signal — context is too big for the lite shape.
+5. **`decisions.md` or `patterns.md` grew past 300 lines.** Time to split by theme; ADRs in `decisions/<NNNN>-<slug>.md` start paying off at that scale.
 
-Before that, don't complicate things. The lite version pays off from the first week. The full one — only from month 3 with discipline. For a small project the choice is obvious.
+Before any of these fire, don't complicate things. The lite version pays off from the first week. The full one — only from month 3 with discipline. For a small project the choice is obvious.
 
 When switching to the full version: the knowledge module, if already set up, moves into the repository as `knowledge/`. But not quite "just moves": in lite the `raw/` structure is flat, in the full version it has subfolders (`user-interviews/`, `competitors/`, `industry/`, `calls/`). You'll need to sort existing raw files into subfolders — usually 30 minutes of work for ~30 files. Wiki/ can stay as is — the LLM will recompile on the next ingest.
 
