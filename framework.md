@@ -49,8 +49,9 @@ This file covers repository architecture, the ADR process, the feature iteration
 9. Infrastructure and deploy
 10. Testing
 11. Rituals
-12. Anti-patterns
-13. Phased rollout
+12. GitHub Projects v2
+13. Anti-patterns
+14. Phased rollout
 
 ---
 
@@ -432,7 +433,7 @@ Triggered when the work involves a real choice between options with significant 
 
 The ADR is then linked back from the Issue body's `## Decisions` section. The link is one-directional: the Issue points to the ADR, the ADR does not need to mention the Issue.
 
-Most features don't require an ADR — don't write one for trivial work. ADR inflation is its own anti-pattern (12.11).
+Most features don't require an ADR — don't write one for trivial work. ADR inflation is its own anti-pattern (13.11).
 
 ### 5.5. Step 4 — Implementation
 
@@ -582,89 +583,107 @@ AI automations like "weekly digest from Cowork" sound nice but break after three
 
 ---
 
-## 12. Anti-patterns
+## 12. GitHub Projects v2
+
+For teams with two or more affected parts of a product, or roughly five or more people, **GitHub Projects v2 is required** — for cross-repo aggregation, hierarchy view of sub-issues, roadmap planning, and the custom fields that drive both human triage and AI agents (Affected parts, Iteration, Type). For solo and lite scenarios, a Project is unnecessary overhead.
+
+Native features actually used (state of GitHub as of May 2026):
+
+- **Hierarchy view** (GA March 2026) — sub-issues nested up to 8 levels, including across repositories when the items are added to the Project.
+- **Issue dependencies** (GA August 2025, REST API since March 2026) — `blocked-by` and `blocking` relations, up to 50 per Issue.
+- **Custom fields** — text, number, date, single-select, iteration. Recommended set: Status, Priority, Affected parts (multi-select), Iteration, plus optional Effort and Type.
+- **Roadmap layout** — timeline view with iterations and milestones as markers.
+- **Project templates** — share the configuration across teams and products.
+
+The killer combination is **Projects v2 + native sub-issues + cross-repo aggregation**: a cross-cutting feature opens as a main Issue in the docs repo, sub-issues in each code repo (chapter 4.3), and the Project pulls them all into a single hierarchy view across repositories. Without a Project, that aggregation must be reconstructed manually.
+
+Setup details, custom field recommendations, automation patterns (auto-add across repos), AI agent operations, and known limits live in `projects.md`.
+
+---
+
+## 13. Anti-patterns
 
 Concrete ways teams break this framework.
 
-### 12.1. Repository as write-only
+### 13.1. Repository as write-only
 
 The most common failure mode. Documents get written, but **nobody reads them**. After three months, the repository is a graveyard. Signs: ADRs never cited in PRs, new joiners do not mention the repository in their first week, discussions have "where was this written?" — "don't remember".
 
 Antidote: repository links in every significant PR; regular "what does the repository say about this?" in discussions; onboarding through the repository, not through verbal explanations.
 
-### 12.2. Single writer
+### 13.2. Single writer
 
 Only one person maintains the repository (usually the founder or tech lead). When they are on vacation or leave, everything freezes.
 
 Antidote: in the first three months every team member must write at least one page. Without this, the habit doesn't form.
 
-### 12.3. AI generates, nobody reviews
+### 13.3. AI generates, nobody reviews
 
 Claude Code writes an ADR on request, nobody reviews. Six months later, half the ADRs contain hallucinated justifications.
 
 Antidote: ADRs go through code review like any other PR. AI generation is a draft, not a final.
 
-### 12.4. Ritual theater
+### 13.4. Ritual theater
 
 Everyone formally attends meetings, writes digests, runs retros. Nothing changes from it.
 
 Antidote: every meeting ends with a list of next actions with owners. The next meeting starts with checking that list.
 
-### 12.5. Repository as Notion replacement
+### 13.5. Repository as Notion replacement
 
 Tasks, calendars, kanban boards appear in the repository. This turns it into operational chaos.
 
 Antidote: hard separation. Tasks — in GitHub Issues or Linear. Knowledge — in the repository. Links between them, no duplicates.
 
-### 12.6. Reinventing GitHub
+### 13.6. Reinventing GitHub
 
 Storing `status`, `owner`, `priority`, `due_date`, and a hand-typed `## Log` section in markdown frontmatter, when GitHub Issues, Milestones, and PR timelines already track this natively. Symptom: feature pages with `status: in-progress` from three months ago.
 
 Antidote: workflow lives in the Issue, knowledge lives in markdown. No frontmatter holds workflow state.
 
-### 12.7. Feature page as Issue cache
+### 13.7. Feature page as Issue cache
 
 A markdown file at `features/<slug>/index.md` (or any other path) that "spec-shadows" a GitHub Issue — copying the Why, Scope, and Success criteria from the Issue body into the repo. The intent is usually noble: "we want grep-able specs", "we want to read it without opening a browser", "AI agents can find it more easily". The result is guaranteed rot: as soon as the Issue body is edited and the markdown isn't, the two sources disagree, and a reader has no way to know which is current.
 
 Antidote: features live only in Issues. There is no markdown layer to drift. AI agents read the Issue through `gh issue view` or the GitHub API; humans read it on github.com. The Issue Template enforces the same fields a markdown skeleton would have, with no second copy to maintain.
 
-### 12.8. Vault per tech layer
+### 13.8. Vault per tech layer
 
 A single product is split into `backend-vault/`, `frontend-vault/`, `design-vault/`. Knowledge about a feature is scattered across layers; the team has to triangulate to answer any question.
 
 Antidote: one repository per product. Domain-module split only when two of three triggers fire (chapter 3.3).
 
-### 12.9. Premature module split
+### 13.9. Premature module split
 
 A team of three splits the repository into four modules "because architecturally that's correct". Creates navigation overhead where the actual workflow had none.
 
 Antidote: split only when two of three triggers fire simultaneously. Until then, one repository, flat.
 
-### 12.10. Expensive start
+### 13.10. Expensive start
 
 Team of three, but Kubernetes, microservices, Kafka, data warehouse. Complexity budget exhausted before the first line of business logic.
 
 Antidote: start with a monolith on managed services. Split and complicate on actual pain.
 
-### 12.11. ADR inflation
+### 13.11. ADR inflation
 
 Forty ADRs in the first quarter, half about HTTP client choice.
 
 Antidote: the heuristic "reversible in a day — no ADR needed".
 
-### 12.12. Perfect repository in the first month
+### 13.12. Perfect repository in the first month
 
 The team spends two weeks setting up the structure before writing code.
 
 Antidote: start with two working directories and a few canon files. Expand on demand.
 
-### 12.13. Knowledge without ingest
+### 13.13. Knowledge without ingest
 
 Set up the knowledge module, drop raw sources, never run ingest. The wiki is stale; the team thinks "we have a knowledge base", but in reality they don't.
 
 Antidote: the ingest session is a ritual, not "we'll do it when there's time". See `knowledge.md` section 5.1.
 
-### 12.14. Security/QA/analytics "later"
+### 13.14. Security/QA/analytics "later"
 
 "PMF first, all this later". Result: the first incident or breach becomes catastrophic.
 
@@ -672,7 +691,7 @@ Antidote: minimum from day one — secrets in a manager, error tracking, event t
 
 ---
 
-## 13. Phased rollout
+## 14. Phased rollout
 
 Realistic timelines for a 2–8 team starting from scratch. **Upper-bound estimates**: reality will be slower.
 
